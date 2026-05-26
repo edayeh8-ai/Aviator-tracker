@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AVIATOR TRACKER v2</title>
+<title>AVIATOR TRACKER v3 — Moteur Prédictif Fusion</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -53,7 +53,7 @@ body::after {
   pointer-events:none;z-index:0;
 }
 
-.wrap { position:relative;z-index:1;max-width:960px;margin:0 auto;padding:16px; }
+.wrap { position:relative;z-index:1;max-width:980px;margin:0 auto;padding:16px; }
 
 /* ── HEADER ── */
 header {
@@ -78,6 +78,12 @@ header {
   background:linear-gradient(90deg,transparent,var(--accent),transparent);
   margin:12px auto 0;
 }
+.badge-v3{
+  display:inline-block;margin-left:12px;
+  background:linear-gradient(135deg,var(--purple),var(--accent));
+  color:#000;font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;
+  padding:2px 7px;border-radius:3px;letter-spacing:2px;vertical-align:middle;
+}
 @keyframes logopulse{
   0%,100%{text-shadow:0 0 25px var(--glow-a),0 0 60px rgba(0,200,255,0.15);}
   50%{text-shadow:0 0 40px var(--glow-a),0 0 100px rgba(0,200,255,0.3);}
@@ -86,7 +92,7 @@ header {
 /* ── STATS GRID ── */
 .stats-grid {
   display:grid;
-  grid-template-columns:repeat(5,1fr);
+  grid-template-columns:repeat(6,1fr);
   gap:10px;
   margin-bottom:16px;
 }
@@ -109,7 +115,7 @@ header {
 .sc-label{font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:6px;}
 .sc-val{
   font-family:'Orbitron',sans-serif;
-  font-size:clamp(16px,2.5vw,22px);
+  font-size:clamp(13px,2vw,19px);
   font-weight:700;
   color:var(--accent);
 }
@@ -117,6 +123,154 @@ header {
 .sc-val.grn{color:var(--green);}
 .sc-val.org{color:var(--warn);}
 .sc-val.pur{color:var(--purple);}
+
+/* ══════════════════════════════════════════════════════
+   ██  BLOC PRÉDICTION CENTRAL — LE COEUR DE V3  ██
+   ══════════════════════════════════════════════════════ */
+.pred-block {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  position: relative;
+}
+.pred-block::before {
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:3px;
+  background: linear-gradient(90deg, transparent, var(--purple), var(--accent), var(--purple), transparent);
+  animation: shimmer 3s linear infinite;
+}
+@keyframes shimmer {
+  0%{background-position:-200% 0;}
+  100%{background-position:200% 0;}
+}
+
+.pred-head {
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 20px;
+  border-bottom:1px solid var(--border);
+  background:rgba(204,68,255,0.04);
+}
+.pred-title {
+  font-family:'Orbitron',sans-serif;
+  font-size:11px;letter-spacing:4px;
+  color:var(--purple);text-transform:uppercase;
+}
+.pred-badge {
+  font-size:9px;letter-spacing:2px;color:var(--dim);
+  background:rgba(204,68,255,0.08);
+  border:1px solid rgba(204,68,255,0.2);
+  padding:3px 8px;border-radius:3px;
+}
+
+.pred-body {
+  display:grid;
+  grid-template-columns: 1fr 2px 1fr 2px 1fr;
+  gap:0;
+}
+.pred-sep {
+  background: linear-gradient(180deg, transparent, var(--border), transparent);
+  margin:16px 0;
+}
+
+/* Colonne prédiction principale */
+.pred-main {
+  padding:24px 28px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;
+  position:relative;
+}
+.pred-main::after {
+  content:'';
+  position:absolute;
+  inset:20px;
+  border-radius:50%;
+  background: radial-gradient(ellipse at center, rgba(204,68,255,0.06) 0%, transparent 70%);
+  pointer-events:none;
+  animation: breathe 4s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%,100%{opacity:.5;transform:scale(.95);}
+  50%{opacity:1;transform:scale(1.05);}
+}
+
+.pred-label-sm {
+  font-size:9px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:10px;
+  position:relative;z-index:1;
+}
+.pred-multiplier {
+  font-family:'Orbitron',sans-serif;
+  font-size:clamp(48px,9vw,88px);
+  font-weight:900;
+  line-height:1;
+  position:relative;z-index:1;
+  transition: all .5s cubic-bezier(.4,0,.2,1);
+  letter-spacing:2px;
+}
+.pred-multiplier.zone-low   { color:var(--danger); text-shadow:0 0 30px var(--glow-d),0 0 60px rgba(255,45,45,0.2); }
+.pred-multiplier.zone-mid   { color:var(--warn);   text-shadow:0 0 30px rgba(255,179,0,0.4),0 0 60px rgba(255,179,0,0.15); }
+.pred-multiplier.zone-hi    { color:var(--green);  text-shadow:0 0 30px var(--glow-g),0 0 60px rgba(0,255,127,0.2); }
+.pred-multiplier.zone-moon  { color:var(--purple); text-shadow:0 0 30px rgba(204,68,255,0.5),0 0 80px rgba(204,68,255,0.3); }
+.pred-multiplier.zone-wait  { color:var(--dim); text-shadow:none; }
+
+.pred-sub {
+  font-size:12px;letter-spacing:2px;color:var(--dim);
+  text-transform:uppercase;margin-top:8px;
+  position:relative;z-index:1;
+}
+
+/* Colonne confiance */
+.pred-conf {
+  padding:24px 20px;
+  display:flex;flex-direction:column;gap:14px;
+}
+.pred-conf-title {
+  font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;
+}
+.conf-bar-row {
+  display:flex;flex-direction:column;gap:5px;
+}
+.conf-bar-label {
+  display:flex;justify-content:space-between;
+  font-size:12px;
+}
+.conf-bar-lbl { color:var(--dim); font-size:11px; letter-spacing:1px; }
+.conf-bar-pct { font-family:'Share Tech Mono',monospace; font-size:11px; }
+.conf-bar-wrap {
+  height:10px;background:rgba(255,255,255,0.03);border-radius:2px;overflow:hidden;
+}
+.conf-bar { height:100%;border-radius:2px;transition:width .8s cubic-bezier(.4,0,.2,1); }
+
+.pred-signal {
+  margin-top:4px;
+  padding:8px 12px;
+  border-radius:4px;
+  font-size:12px;font-weight:700;letter-spacing:1px;text-align:center;
+  transition: all .4s;
+}
+.sig-wait   { background:rgba(58,106,138,0.15);color:var(--dim);border:1px solid var(--border); }
+.sig-danger { background:rgba(255,45,45,0.12);color:var(--danger);border:1px solid rgba(255,45,45,0.3); }
+.sig-warn   { background:rgba(255,179,0,0.1);color:var(--warn);border:1px solid rgba(255,179,0,0.25); }
+.sig-ok     { background:rgba(0,255,127,0.1);color:var(--green);border:1px solid rgba(0,255,127,0.25); }
+.sig-moon   { background:rgba(204,68,255,0.1);color:var(--purple);border:1px solid rgba(204,68,255,0.3); }
+
+/* Colonne Kelly */
+.pred-kelly {
+  padding:24px 20px;
+  display:flex;flex-direction:column;gap:10px;
+  align-items:center;justify-content:center;text-align:center;
+}
+.kelly-title { font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase; }
+.kelly-amount {
+  font-family:'Orbitron',sans-serif;
+  font-size:clamp(22px,3.5vw,34px);
+  font-weight:700;
+  transition: all .5s;
+}
+.kelly-target { font-size:12px;color:var(--dim);letter-spacing:1px; }
+.kelly-edge   { font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--dim); }
+.kelly-note   { font-size:10px;color:var(--dim);line-height:1.5;max-width:160px; }
 
 /* ── TWO COLUMNS ── */
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
@@ -168,7 +322,6 @@ header {
   box-shadow:0 0 12px var(--glow-a);
   font-weight:700;
 }
-
 .mise-custom-row{
   display:flex;gap:8px;align-items:center;margin-bottom:12px;
 }
@@ -187,8 +340,6 @@ header {
   outline:none;border-color:var(--accent);
   box-shadow:0 0 8px var(--glow-a);
 }
-
-/* ── INPUT MULTI ── */
 .multi-row{display:flex;gap:10px;align-items:flex-end;margin-bottom:12px;}
 .field{display:flex;flex-direction:column;gap:5px;flex:1;}
 .field label{font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;}
@@ -205,8 +356,6 @@ header {
   outline:none;border-color:var(--accent);
   box-shadow:0 0 8px var(--glow-a);
 }
-.field select option{background:var(--panel);}
-
 .result-btns{display:flex;gap:8px;margin-bottom:14px;}
 .rbtn{
   flex:1;padding:9px;border:1px solid var(--border);
@@ -236,7 +385,7 @@ header {
 }
 .btn-add:active{transform:translateY(0);}
 
-/* ── CONSEIL STRATEGY ── */
+/* ── CONSEIL ── */
 .conseil{
   padding:14px 16px;
   font-size:14px;line-height:1.7;
@@ -250,7 +399,7 @@ header {
 .conseil.bad strong{color:var(--danger);}
 .conseil.neutral strong{color:var(--warn);}
 
-/* ── PROBABILITE LIVE ── */
+/* ── PROBA LIVE ── */
 .proba-section{margin-bottom:14px;}
 .proba-row{
   display:flex;align-items:center;gap:10px;
@@ -296,7 +445,6 @@ header {
 .history-list{max-height:260px;overflow-y:auto;}
 .history-list::-webkit-scrollbar{width:3px;}
 .history-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
-
 .hitem{
   display:grid;
   grid-template-columns:34px 90px 100px 90px 80px auto;
@@ -310,7 +458,6 @@ header {
 .hitem:hover{background:rgba(0,200,255,0.03);}
 .hitem:last-child{border-bottom:none;}
 @keyframes slideIn{from{opacity:0;transform:translateX(-8px);}to{opacity:1;transform:translateX(0);}}
-
 .h-n{color:var(--dim);font-size:11px;}
 .h-m{font-family:'Orbitron',sans-serif;font-weight:700;font-size:15px;}
 .h-m.low{color:var(--danger);}
@@ -327,13 +474,10 @@ header {
 .h-pnl.neg{color:var(--danger);}
 .btn-del{background:none;border:none;color:var(--dim);cursor:pointer;font-size:13px;padding:2px 6px;transition:color .2s;}
 .btn-del:hover{color:var(--danger);}
-
 .empty{text-align:center;padding:30px;color:var(--dim);font-size:12px;letter-spacing:2px;}
 
-/* ── FULL WIDTH CARD ── */
-.full-card{margin-bottom:14px;}
-
 /* ── DIST ── */
+.full-card{margin-bottom:14px;}
 .dist-rows{display:flex;flex-direction:column;gap:9px;padding:14px 16px;}
 .drow{display:grid;grid-template-columns:100px 1fr 48px 70px;align-items:center;gap:10px;font-size:13px;}
 .dl{color:var(--dim);text-align:right;}
@@ -341,6 +485,31 @@ header {
 .dbar{height:100%;border-radius:2px;transition:width .6s cubic-bezier(.4,0,.2,1);}
 .dpct{font-family:'Share Tech Mono',monospace;font-size:11px;text-align:right;}
 .dtheory{color:var(--dim);font-size:11px;font-family:'Share Tech Mono',monospace;}
+
+/* ── MARKOV MATRIX ── */
+.matrix-section{padding:16px;}
+.matrix-title{font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:12px;}
+.matrix-grid{
+  display:grid;grid-template-columns:70px repeat(4,1fr);gap:3px;font-size:11px;
+}
+.mh{
+  text-align:center;font-size:9px;letter-spacing:1px;color:var(--dim);
+  padding:4px 2px;text-transform:uppercase;
+}
+.mrow-lbl{
+  display:flex;align-items:center;
+  font-size:9px;letter-spacing:1px;color:var(--dim);text-transform:uppercase;
+}
+.mcell{
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(14,48,80,0.5);
+  border-radius:3px;padding:6px 4px;text-align:center;
+  font-family:'Share Tech Mono',monospace;font-size:11px;
+  transition: background .4s, border-color .4s;
+}
+.mcell.high{background:rgba(0,255,127,0.12);border-color:rgba(0,255,127,0.3);color:var(--green);}
+.mcell.med {background:rgba(255,179,0,0.08);border-color:rgba(255,179,0,0.2);color:var(--warn);}
+.mcell.low {background:rgba(14,48,80,0.3);color:var(--dim);}
 
 /* ── BTN CLEAR ── */
 .btn-sm{
@@ -359,16 +528,20 @@ footer{
 }
 
 /* ── RESPONSIVE ── */
-@media(max-width:650px){
+@media(max-width:700px){
   .stats-grid{grid-template-columns:repeat(3,1fr);}
   .cols{grid-template-columns:1fr;}
+  .pred-body{grid-template-columns:1fr;}
+  .pred-sep{display:none;}
   .hitem{grid-template-columns:28px 70px 80px auto;}
   .h-mise,.h-r{display:none;}
-  .mise-grid{grid-template-columns:repeat(3,1fr);}
+  .matrix-grid{grid-template-columns:50px repeat(4,1fr);}
 }
 
 @keyframes flash{0%{background:rgba(0,200,255,0.12);}100%{background:transparent;}}
 .flash{animation:flash .8s ease;}
+@keyframes predflash{0%{opacity:.5;}50%{opacity:1;}100%{opacity:.5;}}
+.pred-updating{animation:predflash .5s ease;}
 </style>
 </head>
 <body>
@@ -376,21 +549,108 @@ footer{
 
 <!-- HEADER -->
 <header>
-  <div class="logo">AVIA<em>TOR</em> TRACKER</div>
-  <div class="tagline">Analyse statistique & probabiliste personnelle</div>
+  <div class="logo">AVIA<em>TOR</em> TRACKER <span class="badge-v3">v3</span></div>
+  <div class="tagline">Moteur Markov + Kelly Fractionnaire · Analyse probabiliste personnelle</div>
   <div class="logo-line"></div>
 </header>
 
-<!-- STATS -->
+<!-- STATS HEADER -->
 <div class="stats-grid">
   <div class="sc"><div class="sc-label">Tours</div><div class="sc-val" id="s-total">0</div></div>
-  <div class="sc"><div class="sc-label">P&L (FCFA)</div><div class="sc-val" id="s-pnl">0</div></div>
+  <div class="sc"><div class="sc-label">P&amp;L (FCFA)</div><div class="sc-val" id="s-pnl">0</div></div>
+  <div class="sc"><div class="sc-label">Capital Virtuel</div><div class="sc-val" id="s-bankroll">—</div></div>
   <div class="sc"><div class="sc-label">Win Rate</div><div class="sc-val" id="s-wr">—</div></div>
-  <div class="sc"><div class="sc-label">Mult. moyen</div><div class="sc-val" id="s-avg">—</div></div>
-  <div class="sc"><div class="sc-label">Streak actuel</div><div class="sc-val" id="s-streak">—</div></div>
+  <div class="sc"><div class="sc-label">Mult. Moyen</div><div class="sc-val" id="s-avg">—</div></div>
+  <div class="sc"><div class="sc-label">Streak Actuel</div><div class="sc-val" id="s-streak">—</div></div>
 </div>
 
-<!-- ROW 1: INPUT + CONSEIL -->
+<!-- ══ BLOC PRÉDICTION CENTRALE (GROSSE SECTION) ══ -->
+<div class="pred-block">
+  <div class="pred-head">
+    <div class="pred-title">🔮 Prédiction Prochain Tour — Moteur Fusion v3</div>
+    <div class="pred-badge" id="pred-model-badge">EN ATTENTE</div>
+  </div>
+  <div class="pred-body">
+
+    <!-- Zone prédiction cible -->
+    <div class="pred-main">
+      <div class="pred-label-sm">Cible Conseillée</div>
+      <div class="pred-multiplier zone-wait" id="pred-mult">?</div>
+      <div class="pred-sub" id="pred-zone-label">Enregistre 5 tours</div>
+      <div class="pred-signal sig-wait" id="pred-signal" style="margin-top:14px;min-width:180px;">
+        — Données insuffisantes —
+      </div>
+    </div>
+
+    <div class="pred-sep"></div>
+
+    <!-- Zone probabilités Markov -->
+    <div class="pred-conf">
+      <div class="pred-conf-title">Distribution Markov — Prochain État</div>
+      <div class="conf-bar-row">
+        <div class="conf-bar-label">
+          <span class="conf-bar-lbl">Crash &lt; 1.5x</span>
+          <span class="conf-bar-pct" id="mk-p0" style="color:var(--danger)">—</span>
+        </div>
+        <div class="conf-bar-wrap"><div class="conf-bar" id="mk-b0" style="width:0%;background:var(--danger)"></div></div>
+      </div>
+      <div class="conf-bar-row">
+        <div class="conf-bar-label">
+          <span class="conf-bar-lbl">Bas 1.5x–3x</span>
+          <span class="conf-bar-pct" id="mk-p1" style="color:var(--warn)">—</span>
+        </div>
+        <div class="conf-bar-wrap"><div class="conf-bar" id="mk-b1" style="width:0%;background:var(--warn)"></div></div>
+      </div>
+      <div class="conf-bar-row">
+        <div class="conf-bar-label">
+          <span class="conf-bar-lbl">Moyen 3x–6x</span>
+          <span class="conf-bar-pct" id="mk-p2" style="color:var(--green)">—</span>
+        </div>
+        <div class="conf-bar-wrap"><div class="conf-bar" id="mk-b2" style="width:0%;background:var(--green)"></div></div>
+      </div>
+      <div class="conf-bar-row">
+        <div class="conf-bar-label">
+          <span class="conf-bar-lbl">Haut ≥ 6x 🚀</span>
+          <span class="conf-bar-pct" id="mk-p3" style="color:var(--purple)">—</span>
+        </div>
+        <div class="conf-bar-wrap"><div class="conf-bar" id="mk-b3" style="width:0%;background:var(--purple)"></div></div>
+      </div>
+
+      <!-- Contexte session -->
+      <div style="margin-top:8px;padding-top:10px;border-top:1px solid var(--border);">
+        <div class="pred-conf-title" style="margin-bottom:6px;">Contexte de session</div>
+        <div id="session-context" style="font-size:12px;color:var(--dim);line-height:1.7;">—</div>
+      </div>
+    </div>
+
+    <div class="pred-sep"></div>
+
+    <!-- Zone Kelly -->
+    <div class="pred-kelly">
+      <div class="kelly-title">Mise Optimale (Kelly ×0.1)</div>
+      <div class="kelly-amount grn" id="kelly-amount" style="color:var(--dim);">—</div>
+      <div class="kelly-target" id="kelly-target">—</div>
+      <div class="kelly-edge" id="kelly-edge">—</div>
+      <div class="kelly-note" id="kelly-note" style="margin-top:8px;font-size:10px;color:var(--dim);line-height:1.5;">
+        Enregistre tes tours pour démarrer le calcul Kelly.
+      </div>
+      <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border);width:100%;text-align:center;">
+        <div class="kelly-title" style="margin-bottom:4px;">Capital de référence</div>
+        <div style="display:flex;gap:6px;align-items:center;justify-content:center;">
+          <input type="number" id="inp-bankroll" value="50000"
+            style="background:var(--bg);border:1px solid var(--border);border-radius:3px;color:var(--text);
+            font-family:'Share Tech Mono';font-size:13px;width:90px;padding:4px 8px;text-align:center;"
+            onchange="updateCapital()">
+          <span style="font-size:10px;color:var(--dim);">FCFA</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- FIN BLOC PRÉDICTION -->
+
+<!-- ROW: INPUT + ANALYSE CONSEIL -->
 <div class="cols">
 
   <!-- INPUT -->
@@ -399,8 +659,6 @@ footer{
       <div class="card-title">▶ Nouveau tour</div>
     </div>
     <div class="card-body">
-
-      <!-- MISES RAPIDES -->
       <div style="font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:8px;">Mise rapide (FCFA)</div>
       <div class="mise-grid">
         <div class="mise-btn" onclick="selectMise(100)">100</div>
@@ -411,44 +669,38 @@ footer{
         <div class="mise-btn" onclick="selectMise(5000)">5 000</div>
         <div class="mise-btn" onclick="selectMise(10000)" style="grid-column:span 3;">10 000 MAX</div>
       </div>
-
       <div class="mise-custom-row">
         <label>Ou montant libre :</label>
-        <input type="number" id="inp-mise" placeholder="ex: 750" min="100" max="10000" step="100">
+        <input type="number" id="inp-mise" placeholder="ex: 750" min="100" max="100000" step="100">
       </div>
-
       <div class="multi-row">
         <div class="field">
-          <label>Multiplicateur crash</label>
+          <label>Multiplicateur final constaté (Crash)</label>
           <input type="number" id="inp-multi" placeholder="ex: 2.45" step="0.01" min="1">
         </div>
       </div>
-
-      <div style="font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:7px;">Résultat</div>
+      <div style="font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:7px;">Résultat personnel</div>
       <div class="result-btns">
         <button class="rbtn" id="rb-win"  onclick="setResult('win')">✅ GAGNÉ</button>
         <button class="rbtn" id="rb-loss" onclick="setResult('loss')">❌ PERDU</button>
         <button class="rbtn" id="rb-skip" onclick="setResult('skip')">⏭ PASSÉ</button>
       </div>
-
       <button class="btn-add" onclick="addRound()">+ ENREGISTRER (ENTRÉE)</button>
     </div>
   </div>
 
-  <!-- CONSEIL STRATEGIE -->
+  <!-- CONSEIL + PROBA THÉO -->
   <div class="card">
     <div class="card-head">
-      <div class="card-title">🧠 Analyse & Conseil</div>
+      <div class="card-title">🧠 Analyse & Conseil Adaptatif</div>
     </div>
     <div id="conseil-box" class="conseil neutral">
       <strong>En attente de données…</strong>
       Entre au moins 5 tours pour obtenir une analyse probabiliste de ta session.
     </div>
-
-    <!-- PROBA LIVE -->
     <div style="padding:0 16px 8px;border-top:1px solid var(--border);margin-top:0;">
       <div style="font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;padding:10px 0 8px;">Probabilités observées vs théoriques</div>
-      <div class="proba-section" id="proba-section">
+      <div class="proba-section">
         <div class="proba-row">
           <div class="proba-label">Atteindre 1.5x</div>
           <div class="proba-bar-wrap"><div class="proba-bar" id="pb-15" style="width:0%;background:var(--warn)"></div></div>
@@ -476,40 +728,40 @@ footer{
       </div>
     </div>
   </div>
-
 </div>
 
-<!-- ROW 2: STREAK + HISTORY -->
+<!-- ROW: STREAK + MATRICE MARKOV -->
 <div class="cols">
-
-  <!-- STREAK VISUEL -->
   <div class="card">
     <div class="card-head">
-      <div class="card-title">⚡ Derniers 20 tours</div>
+      <div class="card-title">⚡ Derniers 20 Tours</div>
     </div>
     <div class="streak-box" id="streak-box">
       <div style="color:var(--dim);font-size:12px;letter-spacing:1px;">Aucun tour encore</div>
     </div>
   </div>
 
-  <!-- CONSEIL MISE -->
+  <!-- MATRICE TRANSITIONS MARKOV -->
   <div class="card">
     <div class="card-head">
-      <div class="card-title">💡 Recommandation mise</div>
+      <div class="card-title">🔢 Matrice de Transition Markov</div>
     </div>
-    <div style="padding:16px;" id="mise-conseil">
-      <div style="color:var(--dim);font-size:13px;line-height:1.8;">
-        Entre tes tours pour recevoir une recommandation de mise adaptée à ta session en cours.
+    <div class="matrix-section">
+      <div class="matrix-title">De ↓ Vers → (4 états : Crash / Bas / Moyen / Haut)</div>
+      <div class="matrix-grid" id="markov-matrix">
+        <!-- Généré dynamiquement -->
+      </div>
+      <div style="margin-top:10px;font-size:10px;color:var(--dim);line-height:1.6;" id="markov-info">
+        La matrice se construit au fur et à mesure des tours enregistrés.
       </div>
     </div>
   </div>
-
 </div>
 
-<!-- HISTORY FULL -->
+<!-- HISTORY -->
 <div class="card full-card history-wrap">
   <div class="card-head">
-    <div class="card-title">📋 Historique complet</div>
+    <div class="card-title">📋 Historique Complet</div>
     <button class="btn-sm" onclick="clearAll()">⚠ RESET</button>
   </div>
   <div class="history-list" id="history-list">
@@ -549,7 +801,7 @@ footer{
     </div>
     <div class="drow">
       <div class="dl">5x — 10x</div>
-      <div class="dbar-w"><div class="dbar" id="db5" style="width:0%;background:#00ccaa)"></div></div>
+      <div class="dbar-w"><div class="dbar" id="db5" style="width:0%;background:#00ccaa"></div></div>
       <div class="dpct" id="dp5">0%</div>
       <div class="dtheory">théorie: 11%</div>
     </div>
@@ -562,123 +814,195 @@ footer{
   </div>
 </div>
 
-<footer>AVIATOR TRACKER v2 · Analyse probabiliste · Données locales · Jouer responsable</footer>
+<footer>AVIATOR TRACKER v3 · Markov 4 états + Kelly Fractionnaire · Données locales · Jouer responsable</footer>
 </div>
 
 <script>
-// ── ÉTAT ────────────────────────────────────────────────────────────────────
-let rounds = JSON.parse(localStorage.getItem('av2_rounds') || '[]');
+// ══════════════════════════════════════════════════════════════════════════════
+//  ÉTAT
+// ══════════════════════════════════════════════════════════════════════════════
+let rounds = JSON.parse(localStorage.getItem('av3_rounds') || '[]');
 let selectedMise = 0;
 let selectedResult = '';
+let initialCapital = parseFloat(localStorage.getItem('av3_capital') || '50000');
 
-// Théorie Aviator (house edge 3%)
+// Probabilités théoriques Aviator (house edge 3%)
 const THEORY = {
-  1.5: 0.97/1.5,   // ~64.7%
-  2:   0.97/2,     // ~48.5%
-  3:   0.97/3,     // ~32.3%
-  5:   0.97/5,     // ~19.4%
+  1.5: 0.97/1.5,
+  2:   0.97/2,
+  3:   0.97/3,
+  5:   0.97/5,
 };
 
-function save(){ localStorage.setItem('av2_rounds', JSON.stringify(rounds)); }
+// ══════════════════════════════════════════════════════════════════════════════
+//  MOTEUR MARKOV — 4 ÉTATS
+//  État 0 : Crash brutal  < 1.50x
+//  État 1 : Zone basse   1.50x – 3.00x
+//  État 2 : Zone moyenne 3.00x – 6.00x
+//  État 3 : Zone haute   >= 6.00x
+// ══════════════════════════════════════════════════════════════════════════════
+function getState(v) {
+  if (v < 1.50) return 0;
+  if (v < 3.00) return 1;
+  if (v < 6.00) return 2;
+  return 3;
+}
 
-// ── MISE SELECTION ──────────────────────────────────────────────────────────
-function selectMise(v){
-  selectedMise = v;
-  document.getElementById('inp-mise').value = v;
-  document.querySelectorAll('.mise-btn').forEach(b => {
-    b.classList.toggle('active', parseInt(b.textContent.replace(/\s/g,'')) === v || b.textContent.includes(v));
+const STATE_LABELS = ['Crash<1.5x', 'Bas 1.5–3x', 'Moy 3–6x', 'Haut≥6x'];
+const STATE_COLORS = ['var(--danger)', 'var(--warn)', 'var(--green)', 'var(--purple)'];
+
+// Construit la matrice 4×4 avec pondération exponentielle sur les N derniers tours
+// Les transitions récentes ont plus de poids (facteur decay)
+function buildMarkovMatrix(decayFactor = 0.92) {
+  const matrix = Array.from({length:4}, () => [0,0,0,0]);
+  const stateSeq = rounds.slice().reverse().map(r => getState(r.multi));
+
+  for (let i = 0; i < stateSeq.length - 1; i++) {
+    const from = stateSeq[i];
+    const to   = stateSeq[i+1];
+    // Pondération : les plus récentes transitions ont plus de poids
+    const recency = stateSeq.length - 1 - i;
+    const weight = Math.pow(decayFactor, recency);
+    matrix[from][to] += weight;
+  }
+  return matrix;
+}
+
+// Normalise la matrice en probabilités
+function normalizeMatrix(matrix) {
+  return matrix.map(row => {
+    const total = row.reduce((a,b) => a+b, 0);
+    if (total === 0) return [0.25, 0.25, 0.25, 0.25]; // Uniforme si pas de donnée
+    return row.map(v => v / total);
   });
 }
 
-document.getElementById('inp-mise').addEventListener('input', function(){
+// Retourne les probas du prochain état depuis l'état courant
+function getNextStateProbas() {
+  if (rounds.length < 3) return null;
+  const raw = buildMarkovMatrix();
+  const normalized = normalizeMatrix(raw);
+  const currentState = getState(rounds[0].multi); // plus récent en tête
+  return {
+    probas: normalized[currentState],
+    currentState,
+    matrix: normalized
+  };
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  FORMULE DE KELLY FRACTIONNAIRE
+//  f = (p*b - q) / b   avec b = multiplicateur_cible - 1
+//  Fraction appliquée : 10% (très conservateur)
+// ══════════════════════════════════════════════════════════════════════════════
+function computeKelly(pWin, targetMulti, bankroll, fraction = 0.10) {
+  const b = targetMulti - 1;
+  const p = Math.max(0.01, Math.min(0.99, pWin));
+  const q = 1 - p;
+  const kelly = (p * b - q) / b;
+  if (kelly <= 0) return { bet: 0, edge: kelly };
+  const rawBet = bankroll * kelly * fraction;
+  const bet = Math.max(100, Math.round(rawBet / 100) * 100);
+  return { bet, edge: kelly };
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  SAVE / LOAD
+// ══════════════════════════════════════════════════════════════════════════════
+function save() {
+  localStorage.setItem('av3_rounds', JSON.stringify(rounds));
+  localStorage.setItem('av3_capital', initialCapital.toString());
+}
+
+function updateCapital() {
+  const v = parseFloat(document.getElementById('inp-bankroll').value);
+  if (!isNaN(v) && v > 0) { initialCapital = v; save(); render(); }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  INPUT
+// ══════════════════════════════════════════════════════════════════════════════
+function selectMise(v) {
+  selectedMise = v;
+  document.getElementById('inp-mise').value = v;
+  document.querySelectorAll('.mise-btn').forEach(b => {
+    const n = parseInt(b.textContent.replace(/\s/g,''));
+    b.classList.toggle('active', n === v);
+  });
+}
+
+document.getElementById('inp-mise').addEventListener('input', function() {
   selectedMise = parseFloat(this.value) || 0;
   document.querySelectorAll('.mise-btn').forEach(b => b.classList.remove('active'));
 });
 
-// ── RESULT SELECTION ────────────────────────────────────────────────────────
-function setResult(r){
+function setResult(r) {
   selectedResult = r;
   ['win','loss','skip'].forEach(x => {
     document.getElementById('rb-'+x).className = 'rbtn' + (x===r ? ' sel-'+x : '');
   });
 }
 
-// ── ADD ROUND ────────────────────────────────────────────────────────────────
-function addRound(){
+function addRound() {
   const multiRaw = document.getElementById('inp-multi').value;
   const multi = parseFloat(multiRaw);
-
-  if(!multiRaw || isNaN(multi) || multi < 1){
-    shake('inp-multi'); return;
-  }
-  if(!selectedMise && selectedResult !== 'skip'){
-    shake('inp-mise'); return;
-  }
+  if (!multiRaw || isNaN(multi) || multi < 1) { shake('inp-multi'); return; }
+  if (!selectedMise && selectedResult !== 'skip') { shake('inp-mise'); return; }
 
   const mise = selectedMise || 0;
   let pnl = 0;
-  // Note: on suppose cashout au crash pour simplifier
-  // En réalité l'utilisateur a cashout avant ou après
-  if(selectedResult === 'win')  pnl = mise * (multi - 1);
-  if(selectedResult === 'loss') pnl = -mise;
+  if (selectedResult === 'win')  pnl =  mise * (multi - 1);
+  if (selectedResult === 'loss') pnl = -mise;
 
   rounds.unshift({
-    id: Date.now(),
-    multi,
-    mise,
-    result: selectedResult || 'skip',
-    pnl,
+    id: Date.now(), multi, mise,
+    result: selectedResult || 'skip', pnl,
     time: new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})
   });
 
-  save();
-  render();
+  save(); render();
 
-  // Reset
   document.getElementById('inp-multi').value = '';
   document.getElementById('inp-mise').value = '';
-  selectedMise = 0;
-  selectedResult = '';
+  selectedMise = 0; selectedResult = '';
   document.querySelectorAll('.mise-btn').forEach(b=>b.classList.remove('active'));
   ['win','loss','skip'].forEach(x=>{ document.getElementById('rb-'+x).className='rbtn'; });
   document.getElementById('inp-multi').focus();
 }
 
-function deleteRound(id){
+function deleteRound(id) {
   rounds = rounds.filter(r=>r.id!==id);
   save(); render();
 }
 
-function clearAll(){
-  if(confirm('Effacer tout l\'historique ?')){ rounds=[]; save(); render(); }
+function clearAll() {
+  if (confirm('Effacer tout l\'historique ?')) { rounds=[]; save(); render(); }
 }
 
-// ── RENDER ───────────────────────────────────────────────────────────────────
-function render(){
+// ══════════════════════════════════════════════════════════════════════════════
+//  RENDER PRINCIPAL
+// ══════════════════════════════════════════════════════════════════════════════
+function render() {
+  document.getElementById('inp-bankroll').value = initialCapital;
   renderStats();
-  renderHistory();
-  renderStreak();
-  renderDist();
-  renderProba();
+  renderPrediction();
   renderConseil();
-  renderMiseConseil();
+  renderProba();
+  renderStreak();
+  renderMarkovMatrix();
+  renderHistory();
+  renderDist();
 }
 
-function renderStats(){
+// ─── STATS ───────────────────────────────────────────────────────────────────
+function renderStats() {
   const n = rounds.length;
   const pnl = rounds.reduce((s,r)=>s+r.pnl, 0);
+  const currentBankroll = initialCapital + pnl;
   const played = rounds.filter(r=>r.result==='win'||r.result==='loss');
   const wins = played.filter(r=>r.result==='win').length;
   const wr = played.length ? Math.round(wins/played.length*100) : null;
   const avg = n ? rounds.reduce((s,r)=>s+r.multi,0)/n : 0;
-
-  // Streak
-  let streak = 0, streakType = '';
-  for(let r of rounds){
-    if(streak===0){ streakType=r.result; streak=1; }
-    else if(r.result===streakType) streak++;
-    else break;
-  }
 
   document.getElementById('s-total').textContent = n;
 
@@ -686,37 +1010,282 @@ function renderStats(){
   pnlEl.textContent = (pnl>=0?'+':'')+Math.round(pnl).toLocaleString('fr-FR');
   pnlEl.className = 'sc-val '+(pnl>0?'grn':pnl<0?'red':'');
 
+  const brEl = document.getElementById('s-bankroll');
+  brEl.textContent = Math.round(currentBankroll).toLocaleString('fr-FR')+' F';
+  brEl.className = 'sc-val '+(currentBankroll > initialCapital ? 'grn' : currentBankroll < initialCapital ? 'red' : '');
+
   const wrEl = document.getElementById('s-wr');
   wrEl.textContent = wr!==null ? wr+'%' : '—';
   wrEl.className = 'sc-val '+(wr===null?'':(wr>=55?'grn':wr>=40?'org':'red'));
 
   document.getElementById('s-avg').textContent = avg ? avg.toFixed(2)+'x' : '—';
 
+  // Streak
+  let streak=0, streakType='';
+  for (let r of rounds) {
+    if (streak===0) { streakType=r.result; streak=1; }
+    else if (r.result===streakType) streak++;
+    else break;
+  }
   const sk = document.getElementById('s-streak');
-  if(streak>0){
-    const icons = {win:'✅',loss:'❌',skip:'⏭'};
+  if (streak>0) {
+    const icons={win:'✅',loss:'❌',skip:'⏭'};
     sk.textContent = icons[streakType]+'×'+streak;
-    sk.className = 'sc-val '+(streakType==='win'?'grn':streakType==='loss'?'red':'org');
+    sk.className='sc-val '+(streakType==='win'?'grn':streakType==='loss'?'red':'org');
+  } else { sk.textContent='—'; sk.className='sc-val'; }
+}
+
+// ─── PRÉDICTION CENTRALE ──────────────────────────────────────────────────────
+function renderPrediction() {
+  const mk = getNextStateProbas();
+  const pnl = rounds.reduce((s,r)=>s+r.pnl, 0);
+  const currentBankroll = Math.max(100, initialCapital + pnl);
+
+  const multEl   = document.getElementById('pred-mult');
+  const zoneEl   = document.getElementById('pred-zone-label');
+  const sigEl    = document.getElementById('pred-signal');
+  const badgeEl  = document.getElementById('pred-model-badge');
+  const amountEl = document.getElementById('kelly-amount');
+  const targetEl = document.getElementById('kelly-target');
+  const edgeEl   = document.getElementById('kelly-edge');
+  const noteEl   = document.getElementById('kelly-note');
+
+  if (!mk) {
+    badgeEl.textContent = 'EN ATTENTE';
+    multEl.textContent = '?';
+    multEl.className = 'pred-multiplier zone-wait';
+    zoneEl.textContent = 'Enregistre 5 tours minimum';
+    sigEl.textContent = '— Données insuffisantes —';
+    sigEl.className = 'pred-signal sig-wait';
+    amountEl.textContent = '—';
+    amountEl.style.color = 'var(--dim)';
+    targetEl.textContent = '—';
+    edgeEl.textContent = '—';
+
+    // Barres Markov vides
+    [0,1,2,3].forEach(i => {
+      document.getElementById('mk-p'+i).textContent = '—';
+      document.getElementById('mk-b'+i).style.width = '0%';
+    });
+    document.getElementById('session-context').innerHTML = '—';
+    return;
+  }
+
+  const { probas, currentState } = mk;
+
+  // Mise à jour barres Markov
+  probas.forEach((p, i) => {
+    const pct = Math.round(p * 100);
+    document.getElementById('mk-p'+i).textContent = pct+'%';
+    document.getElementById('mk-b'+i).style.width = Math.min(pct,100)+'%';
+  });
+
+  // Détermination de l'état prédit (probabilité max)
+  const maxIdx = probas.indexOf(Math.max(...probas));
+  const maxProb = probas[maxIdx];
+
+  // Cible de cashout et zone
+  let targetMulti, zoneText, zoneCls, signalCls, signalText;
+
+  if (maxIdx === 0) {
+    targetMulti = 1.25;
+    zoneText = 'Zone Crash — Cashout Précoce';
+    zoneCls = 'zone-low';
+    signalCls = 'pred-signal sig-danger';
+    signalText = `🔴 DANGER — Bas crash probable (${Math.round(maxProb*100)}%)`;
+  } else if (maxIdx === 1) {
+    targetMulti = 1.65;
+    zoneText = 'Zone Basse — Cashout Prudent';
+    zoneCls = 'zone-mid';
+    signalCls = 'pred-signal sig-warn';
+    signalText = `⚠️ PRUDENCE — Zone basse probable (${Math.round(maxProb*100)}%)`;
+  } else if (maxIdx === 2) {
+    targetMulti = 2.50;
+    zoneText = 'Zone Moyenne — Opportunité';
+    zoneCls = 'zone-hi';
+    signalCls = 'pred-signal sig-ok';
+    signalText = `✅ FAVORABLE — Zone moyenne probable (${Math.round(maxProb*100)}%)`;
   } else {
-    sk.textContent='—'; sk.className='sc-val';
+    targetMulti = 4.00;
+    zoneText = 'Zone Haute — Spéculatif';
+    zoneCls = 'zone-moon';
+    signalCls = 'pred-signal sig-moon';
+    signalText = `🚀 SPÉCULATIF — Zone haute probable (${Math.round(maxProb*100)}%)`;
+  }
+
+  // Affichage du multiplicateur cible
+  multEl.className = 'pred-multiplier pred-updating ' + zoneCls;
+  multEl.textContent = targetMulti.toFixed(2) + 'x';
+  zoneEl.textContent = zoneText;
+  sigEl.className = signalCls;
+  sigEl.textContent = signalText;
+
+  // Confiance du modèle
+  const confLevel = maxProb >= 0.60 ? 'HAUTE' : maxProb >= 0.40 ? 'MOYENNE' : 'FAIBLE';
+  badgeEl.textContent = `MARKOV · Confiance ${confLevel} (${Math.round(maxProb*100)}%)`;
+
+  // Kelly
+  const pWin = 1 - probas[0]; // proba de ne pas crasher immédiatement
+  const kelly = computeKelly(pWin, targetMulti, currentBankroll);
+
+  if (kelly.bet === 0 || kelly.edge <= 0) {
+    amountEl.textContent = 'PAUSE';
+    amountEl.style.color = 'var(--danger)';
+    targetEl.textContent = 'Avantage négatif ce tour';
+    edgeEl.textContent = `Edge Kelly: ${(kelly.edge*100).toFixed(1)}%`;
+    noteEl.textContent = 'Probabilité insuffisante pour justifier une mise. Passe ce tour.';
+  } else {
+    amountEl.textContent = kelly.bet.toLocaleString('fr-FR') + ' F';
+    amountEl.style.color = maxIdx <= 0 ? 'var(--danger)' : maxIdx === 1 ? 'var(--warn)' : 'var(--green)';
+    targetEl.textContent = `Cible cashout : ${targetMulti.toFixed(2)}x`;
+    edgeEl.textContent = `Edge estimé : +${(kelly.edge*100).toFixed(1)}%`;
+    noteEl.textContent = `Mise calculée sur ${Math.round(currentBankroll).toLocaleString('fr-FR')} F de capital effectif.`;
+  }
+
+  // Contexte session
+  const last5 = rounds.slice(0,5);
+  const last5crashes = last5.filter(r=>r.multi<1.5).length;
+  const last5wins = last5.filter(r=>r.result==='win').length;
+  const sessionPnl = rounds.reduce((s,r)=>s+r.pnl,0);
+  const ctx = [];
+  if (last5crashes >= 3) ctx.push(`<span style="color:var(--danger)">⚠ ${last5crashes} crashs &lt;1.5x sur 5 derniers</span>`);
+  if (last5wins === 5) ctx.push(`<span style="color:var(--green)">🔥 5/5 victoires récentes</span>`);
+  if (last5.filter(r=>r.result==='loss').length >= 4) ctx.push(`<span style="color:var(--danger)">🚨 Stop-loss conseillé</span>`);
+  ctx.push(`P&L session : <span style="color:${sessionPnl>=0?'var(--green)':'var(--danger)'}">${sessionPnl>=0?'+':''}${Math.round(sessionPnl).toLocaleString('fr-FR')} F</span>`);
+  document.getElementById('session-context').innerHTML = ctx.join(' · ');
+}
+
+// ─── CONSEIL ADAPTATIF ────────────────────────────────────────────────────────
+function renderConseil() {
+  const box = document.getElementById('conseil-box');
+  const played = rounds.filter(r=>r.result==='win'||r.result==='loss');
+  if (played.length < 5) {
+    box.className='conseil neutral';
+    box.innerHTML='<strong>En attente…</strong>Entre au moins 5 tours joués pour activer l\'analyse adaptative.';
+    return;
+  }
+
+  const n = rounds.length;
+  const pnl = rounds.reduce((s,r)=>s+r.pnl,0);
+  const wins = played.filter(r=>r.result==='win').length;
+  const wr = wins / played.length;
+  const lowCrash = rounds.filter(r=>r.multi<1.5).length / n;
+  const last5 = rounds.slice(0,5);
+  const last5losses = last5.filter(r=>r.result==='loss').length;
+  let consecLow = 0;
+  for (let r of rounds) { if (r.multi < 2) consecLow++; else break; }
+
+  let msg='', cls='neutral';
+
+  if (last5losses >= 4) {
+    cls='bad';
+    msg=`<strong>🚨 STOP-LOSS RECOMMANDÉ</strong>${last5losses} défaites sur les 5 derniers tours. Pause ou mise minimale (100 FCFA) pendant 5 tours.`;
+  } else if (consecLow >= 4) {
+    cls='neutral';
+    msg=`<strong>⚠️ Série de ${consecLow} bas crashs consécutifs</strong>Statistiquement un rebond devient plus probable, mais non garanti. Cashout prudent à <b>1.3x–1.5x</b>.`;
+  } else if (pnl > 0 && wr >= 0.55) {
+    cls='ok';
+    msg=`<strong>✅ Session positive</strong>Win rate ${Math.round(wr*100)}% · P&L positif. Maintiens la discipline, cashout systématique entre <b>1.3x et 1.5x</b>.`;
+  } else if (lowCrash > 0.50) {
+    cls='bad';
+    msg=`<strong>🔴 Session difficile</strong>${Math.round(lowCrash*100)}% des crashs sous 1.5x. Stratégie : <b>mises réduites + cashout précoce à 1.2x</b>.`;
+  } else {
+    msg=`<strong>📊 Session neutre</strong>Win rate ${Math.round(wr*100)}% normal. Reste discipliné : cashout entre <b>1.3x–2x</b>, ne chasse pas les gros multiplicateurs.`;
+  }
+
+  box.className='conseil '+cls;
+  box.innerHTML=msg;
+}
+
+// ─── PROBAS OBSERVÉES vs THÉORIQUES ──────────────────────────────────────────
+function renderProba() {
+  const n = rounds.length;
+  if (n < 3) {
+    ['15','2','3','5'].forEach(k => {
+      document.getElementById('pp-'+k).textContent='—';
+      document.getElementById('ps-'+k).textContent='—';
+      document.getElementById('ps-'+k).className='proba-signal';
+    });
+    return;
+  }
+  const thresholds = [
+    {id:'15', val:1.5, theory:THEORY[1.5]},
+    {id:'2',  val:2,   theory:THEORY[2]},
+    {id:'3',  val:3,   theory:THEORY[3]},
+    {id:'5',  val:5,   theory:THEORY[5]},
+  ];
+  thresholds.forEach(t => {
+    const obs = rounds.filter(r=>r.multi>=t.val).length / n;
+    const pct = Math.round(obs*100);
+    document.getElementById('pb-'+t.id).style.width = Math.min(pct,100)+'%';
+    document.getElementById('pp-'+t.id).textContent = pct+'%';
+    const diff = obs - t.theory;
+    const sig = document.getElementById('ps-'+t.id);
+    if (diff > 0.05)      { sig.textContent='↑ CHAUD'; sig.className='proba-signal sig-hot'; }
+    else if (diff < -0.05){ sig.textContent='↓ FROID'; sig.className='proba-signal sig-cold'; }
+    else                   { sig.textContent='≈ NORMAL'; sig.className='proba-signal sig-neu'; }
+  });
+}
+
+// ─── STREAK ──────────────────────────────────────────────────────────────────
+function renderStreak() {
+  const el = document.getElementById('streak-box');
+  const last20 = rounds.slice(0,20).reverse();
+  if (!last20.length) { el.innerHTML='<div style="color:var(--dim);font-size:12px;letter-spacing:1px;">Aucun tour encore</div>'; return; }
+  const clsMap = {low:'sd-low',mid:'sd-mid',hi:'sd-high',moon:'sd-moon'};
+  el.innerHTML = last20.map(r => {
+    const s = r.multi<1.5?'low':r.multi<2?'mid':r.multi<5?'hi':'moon';
+    const label = r.multi>=10?'🚀':r.multi.toFixed(1);
+    return `<div class="streak-dot ${clsMap[s]}" title="${r.multi}x — ${r.result}">${label}</div>`;
+  }).join('');
+}
+
+// ─── MATRICE MARKOV ───────────────────────────────────────────────────────────
+function renderMarkovMatrix() {
+  const el = document.getElementById('markov-matrix');
+  const info = document.getElementById('markov-info');
+
+  if (rounds.length < 3) {
+    el.innerHTML = '<div style="color:var(--dim);font-size:11px;grid-column:span 5;">Minimum 3 tours requis pour construire la matrice.</div>';
+    info.textContent = 'La matrice se construit au fur et à mesure des tours enregistrés.';
+    return;
+  }
+
+  const raw = buildMarkovMatrix();
+  const normalized = normalizeMatrix(raw);
+  const stateShort = ['<1.5x', '1.5-3x', '3-6x', '≥6x'];
+
+  let html = '<div class="mh"></div>';
+  stateShort.forEach(l => { html += `<div class="mh">${l}</div>`; });
+
+  normalized.forEach((row, i) => {
+    html += `<div class="mrow-lbl">${stateShort[i]}</div>`;
+    row.forEach((val, j) => {
+      const pct = Math.round(val * 100);
+      const cls = pct >= 45 ? 'high' : pct >= 25 ? 'med' : 'low';
+      const highlight = i === j ? 'outline:1px solid rgba(255,255,255,0.1);' : '';
+      html += `<div class="mcell ${cls}" style="${highlight}">${pct}%</div>`;
+    });
+  });
+
+  el.innerHTML = html;
+
+  // Info sur l'état courant
+  if (rounds.length >= 3) {
+    const cur = getState(rounds[0].multi);
+    info.innerHTML = `État actuel : <b style="color:${STATE_COLORS[cur]}">${STATE_LABELS[cur]}</b> · 
+    Lecture : chaque ligne = depuis cet état, probabilité d'aller vers chaque colonne.`;
   }
 }
 
-function multiCls(m){
-  if(m<1.5) return 'low';
-  if(m<2)   return 'mid';
-  if(m<5)   return 'hi';
-  return 'moon';
-}
-
-function renderHistory(){
+// ─── HISTORY ─────────────────────────────────────────────────────────────────
+function renderHistory() {
   const el = document.getElementById('history-list');
-  if(!rounds.length){ el.innerHTML='<div class="empty">[ AUCUN TOUR ENREGISTRÉ ]</div>'; return; }
-
-  el.innerHTML = rounds.map((r,i)=>{
-    const mc = multiCls(r.multi);
+  if (!rounds.length) { el.innerHTML='<div class="empty">[ AUCUN TOUR ENREGISTRÉ ]</div>'; return; }
+  el.innerHTML = rounds.map((r,i) => {
+    const mc = r.multi<1.5?'low':r.multi<2?'mid':r.multi<5?'hi':'moon';
     const rl = r.result==='win'?'✅ WIN':r.result==='loss'?'❌ LOSS':'⏭ SKIP';
-    const rc = r.result==='win'?'win':r.result==='loss'?'loss':'skip';
+    const rc = r.result;
     const pc = r.pnl>0?'pos':r.pnl<0?'neg':'';
     const pl = r.pnl!==0?(r.pnl>0?'+':'')+Math.round(r.pnl).toLocaleString('fr-FR')+' F':'—';
     return `<div class="hitem ${i===0?'flash':''}">
@@ -730,172 +1299,28 @@ function renderHistory(){
   }).join('');
 }
 
-function renderStreak(){
-  const el = document.getElementById('streak-box');
-  const last20 = rounds.slice(0,20).reverse();
-  if(!last20.length){ el.innerHTML='<div style="color:var(--dim);font-size:12px;letter-spacing:1px;">Aucun tour encore</div>'; return; }
-
-  el.innerHTML = last20.map(r=>{
-    const cls = multiCls(r.multi);
-    const clsMap = {low:'sd-low',mid:'sd-mid',hi:'sd-high',moon:'sd-moon'};
-    const label = r.multi>=10?'🚀':r.multi.toFixed(1);
-    return `<div class="streak-dot ${clsMap[cls]}" title="${r.multi}x">${label}</div>`;
-  }).join('');
-}
-
-function renderDist(){
-  if(!rounds.length) return;
+// ─── DISTRIBUTION ─────────────────────────────────────────────────────────────
+function renderDist() {
+  if (!rounds.length) return;
   const n = rounds.length;
   const zones = [
-    r=>r.multi<1.5,
-    r=>r.multi>=1.5&&r.multi<2,
-    r=>r.multi>=2&&r.multi<3,
-    r=>r.multi>=3&&r.multi<5,
-    r=>r.multi>=5&&r.multi<10,
-    r=>r.multi>=10,
+    r=>r.multi<1.5, r=>r.multi>=1.5&&r.multi<2,
+    r=>r.multi>=2&&r.multi<3, r=>r.multi>=3&&r.multi<5,
+    r=>r.multi>=5&&r.multi<10, r=>r.multi>=10,
   ];
-  zones.forEach((fn,i)=>{
+  zones.forEach((fn,i) => {
     const c = rounds.filter(fn).length;
     const p = Math.round(c/n*100);
-    document.getElementById(`db${i+1}`).style.width=p+'%';
-    document.getElementById(`dp${i+1}`).textContent=p+'%';
+    document.getElementById(`db${i+1}`).style.width = p+'%';
+    document.getElementById(`dp${i+1}`).textContent = p+'%';
   });
 }
 
-function renderProba(){
-  const n = rounds.length;
-  if(n<3){
-    [15,2,3,5].forEach(x=>{
-      const k = x===15?'15':x;
-      document.getElementById('pp-'+k).textContent='—';
-      document.getElementById('ps-'+k).textContent='—';
-      document.getElementById('ps-'+k).className='proba-signal';
-    });
-    return;
-  }
+// ── UTILITAIRES ──────────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => { if (e.key==='Enter') addRound(); });
 
-  const thresholds = [
-    {id:'15', val:1.5, theory:THEORY[1.5]},
-    {id:'2',  val:2,   theory:THEORY[2]},
-    {id:'3',  val:3,   theory:THEORY[3]},
-    {id:'5',  val:5,   theory:THEORY[5]},
-  ];
-
-  thresholds.forEach(t=>{
-    const obs = rounds.filter(r=>r.multi>=t.val).length / n;
-    const pct = Math.round(obs*100);
-    const barPct = Math.min(pct, 100);
-    document.getElementById('pb-'+t.id).style.width = barPct+'%';
-    document.getElementById('pp-'+t.id).textContent = pct+'%';
-
-    const diff = obs - t.theory;
-    const sig = document.getElementById('ps-'+t.id);
-    if(diff > 0.05){
-      sig.textContent='↑ CHAUD'; sig.className='proba-signal sig-hot';
-    } else if(diff < -0.05){
-      sig.textContent='↓ FROID'; sig.className='proba-signal sig-cold';
-    } else {
-      sig.textContent='≈ NORMAL'; sig.className='proba-signal sig-neu';
-    }
-  });
-}
-
-function renderConseil(){
-  const box = document.getElementById('conseil-box');
-  const played = rounds.filter(r=>r.result==='win'||r.result==='loss');
-
-  if(played.length < 5){
-    box.className='conseil neutral';
-    box.innerHTML='<strong>En attente…</strong>Entre au moins 5 tours joués pour l\'analyse.';
-    return;
-  }
-
-  const n = rounds.length;
-  const wins = played.filter(r=>r.result==='win').length;
-  const wr = wins/played.length;
-  const pnl = rounds.reduce((s,r)=>s+r.pnl,0);
-  const lowCrash = rounds.filter(r=>r.multi<1.5).length/n;
-  const last5 = rounds.slice(0,5);
-  const last5losses = last5.filter(r=>r.result==='loss').length;
-
-  // Analyse probabiliste des séries
-  let consecLow = 0;
-  for(let r of rounds){
-    if(r.multi<2) consecLow++; else break;
-  }
-
-  let msg='', cls='neutral';
-
-  if(last5losses>=4){
-    cls='bad';
-    msg=`<strong>🚨 STOP-LOSS RECOMMANDÉ</strong>
-    ${last5losses} défaites sur les 5 derniers tours. La variance est contre toi en ce moment.
-    Conseil : <b>Pause de 10 minutes</b> ou baisse ta mise au minimum (100 FCFA) pendant 5 tours.`;
-  } else if(consecLow>=4){
-    cls='neutral';
-    msg=`<strong>⚠️ Série de bas crashs (×${consecLow})</strong>
-    ${consecLow} crashs consécutifs sous 2x. Statistiquement, un multiplicateur plus élevé devient probable,
-    mais ce n'est pas une certitude. Envisage un cashout à <b>1.3x–1.5x</b> sur le prochain tour.`;
-  } else if(pnl>0 && wr>=0.55){
-    cls='ok';
-    msg=`<strong>✅ Bonne session</strong>
-    Taux de victoire ${Math.round(wr*100)}% · P&L positif. Continue avec discipline.
-    Cashout systématique entre <b>1.3x et 1.5x</b> pour sécuriser tes gains.`;
-  } else if(lowCrash>0.5){
-    cls='bad';
-    msg=`<strong>🔴 Session difficile</strong>
-    ${Math.round(lowCrash*100)}% des crashs sous 1.5x. Le jeu est "chaud" en petits crashs aujourd'hui.
-    Stratégie : <b>mises réduites + cashout précoce à 1.2x</b>.`;
-  } else {
-    msg=`<strong>📊 Session neutre</strong>
-    Win rate ${Math.round(wr*100)}% · Multiplicateur moyen normal.
-    Reste discipliné : cashout entre <b>1.3x–2x</b>, ne chasse pas les gros multiplicateurs.`;
-  }
-
-  box.className='conseil '+cls;
-  box.innerHTML=msg;
-}
-
-function renderMiseConseil(){
-  const el = document.getElementById('mise-conseil');
-  const played = rounds.filter(r=>r.result==='win'||r.result==='loss');
-  if(played.length<3){
-    el.innerHTML='<div style="color:var(--dim);font-size:13px;line-height:1.8;">Entre tes tours pour recevoir une recommandation de mise.</div>';
-    return;
-  }
-
-  const pnl = rounds.reduce((s,r)=>s+r.pnl,0);
-  const last3 = rounds.slice(0,3);
-  const last3losses = last3.filter(r=>r.result==='loss').length;
-  const avgMise = played.reduce((s,r)=>s+r.mise,0)/played.length;
-
-  let rec='';
-  if(last3losses>=3){
-    rec=`<div style="color:var(--danger);font-size:15px;font-weight:700;margin-bottom:8px;">🚨 Mise minimale conseillée</div>
-    <div style="font-family:'Orbitron',sans-serif;font-size:24px;color:var(--danger)">100 FCFA</div>
-    <div style="color:var(--dim);font-size:12px;margin-top:6px;">3 pertes consécutives — protège ton capital</div>`;
-  } else if(pnl>0 && last3losses===0){
-    const suggested = Math.min(avgMise*1.2, 10000);
-    const rounded = Math.round(suggested/100)*100;
-    rec=`<div style="color:var(--green);font-size:15px;font-weight:700;margin-bottom:8px;">✅ Tu peux maintenir</div>
-    <div style="font-family:'Orbitron',sans-serif;font-size:24px;color:var(--green)">${rounded.toLocaleString('fr-FR')} FCFA</div>
-    <div style="color:var(--dim);font-size:12px;margin-top:6px;">Session positive — reste prudent</div>`;
-  } else {
-    rec=`<div style="color:var(--warn);font-size:15px;font-weight:700;margin-bottom:8px;">⚠️ Mise prudente conseillée</div>
-    <div style="font-family:'Orbitron',sans-serif;font-size:24px;color:var(--warn)">200 FCFA</div>
-    <div style="color:var(--dim);font-size:12px;margin-top:6px;">Session mitigée — limite le risque</div>`;
-  }
-
-  el.innerHTML=rec;
-}
-
-// ── KEYBOARD ──────────────────────────────────────────────────────────────────
-document.addEventListener('keydown', e=>{
-  if(e.key==='Enter') addRound();
-});
-
-function shake(id){
-  const el=document.getElementById(id);
+function shake(id) {
+  const el = document.getElementById(id);
   el.style.borderColor='var(--danger)';
   el.style.boxShadow='0 0 10px rgba(255,45,45,0.4)';
   setTimeout(()=>{ el.style.borderColor=''; el.style.boxShadow=''; }, 800);
