@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AVIATOR TRACKER</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050a0f;
+    --panel: #0a1520;
+    --border: #0f3a5a;
+    --accent: #00d4ff;
+    --danger: #ff3a3a;
+    --warn: #ffaa00;
+    --green: #00ff88;
+    --text: #c8e8f8;
+    --dim: #4a7a9a;
+    --glow: 0 0 20px rgba(0,212,255,0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* HEADER */
+  header {
+    text-align: center;
+    padding: 30px 0 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 1px;
+    background: var(--accent);
+    box-shadow: var(--glow);
+  }
+
+  .logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(24px, 5vw, 42px);
+    font-weight: 900;
+    letter-spacing: 8px;
+    color: var(--accent);
+    text-shadow: 0 0 30px rgba(0,212,255,0.6), 0 0 60px rgba(0,212,255,0.2);
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  .logo span { color: var(--danger); }
+
+  .subtitle {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--dim);
+    margin-top: 6px;
+    text-transform: uppercase;
+  }
+
+  @keyframes pulse {
+    0%, 100% { text-shadow: 0 0 30px rgba(0,212,255,0.6), 0 0 60px rgba(0,212,255,0.2); }
+    50% { text-shadow: 0 0 50px rgba(0,212,255,0.9), 0 0 100px rgba(0,212,255,0.4); }
+  }
+
+  /* STATS ROW */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 14px 12px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    opacity: 0.5;
+  }
+
+  .stat-card:hover { border-color: var(--accent); }
+
+  .stat-label {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--dim);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .stat-value {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(18px, 3vw, 26px);
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .stat-value.danger { color: var(--danger); }
+  .stat-value.green { color: var(--green); }
+  .stat-value.warn { color: var(--warn); }
+
+  /* INPUT SECTION */
+  .input-section {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+
+  .input-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+
+  .input-row {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr auto;
+    gap: 12px;
+    align-items: end;
+  }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+
+  .field label {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--dim);
+    text-transform: uppercase;
+  }
+
+  .field input, .field select {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 12px 14px;
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 18px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+    -moz-appearance: textfield;
+  }
+
+  .field input::-webkit-outer-spin-button,
+  .field input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+  .field input:focus, .field select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 10px rgba(0,212,255,0.2);
+  }
+
+  .field select option { background: var(--panel); }
+
+  .btn-add {
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    border-radius: 3px;
+    padding: 12px 24px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    height: 48px;
+  }
+
+  .btn-add:hover {
+    background: #fff;
+    box-shadow: 0 0 20px rgba(0,212,255,0.5);
+    transform: translateY(-1px);
+  }
+
+  .btn-add:active { transform: translateY(0); }
+
+  /* STRATEGY ALERT */
+  .strategy-box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--warn);
+    border-radius: 4px;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 13px;
+  }
+
+  .strategy-box .icon { font-size: 20px; }
+  .strategy-box .msg { color: var(--text); line-height: 1.6; }
+  .strategy-box .msg strong { color: var(--warn); }
+  .strategy-box.ok { border-left-color: var(--green); }
+  .strategy-box.ok .msg strong { color: var(--green); }
+  .strategy-box.bad { border-left-color: var(--danger); }
+  .strategy-box.bad .msg strong { color: var(--danger); }
+
+  /* HISTORY */
+  .history-section {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+
+  .history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .history-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  .btn-clear {
+    background: transparent;
+    border: 1px solid var(--danger);
+    color: var(--danger);
+    border-radius: 3px;
+    padding: 5px 12px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+
+  .btn-clear:hover { background: var(--danger); color: var(--bg); }
+
+  .history-list {
+    max-height: 280px;
+    overflow-y: auto;
+  }
+
+  .history-list::-webkit-scrollbar { width: 4px; }
+  .history-list::-webkit-scrollbar-track { background: var(--bg); }
+  .history-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .history-item {
+    display: grid;
+    grid-template-columns: 40px 1fr 1fr 1fr 1fr auto;
+    align-items: center;
+    padding: 10px 18px;
+    border-bottom: 1px solid rgba(15,58,90,0.4);
+    font-size: 13px;
+    animation: slideIn 0.3s ease;
+    transition: background 0.2s;
+  }
+
+  .history-item:hover { background: rgba(0,212,255,0.03); }
+  .history-item:last-child { border-bottom: none; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .h-num { color: var(--dim); font-size: 11px; }
+
+  .h-multi {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  .h-multi.low { color: var(--danger); }
+  .h-multi.mid { color: var(--warn); }
+  .h-multi.high { color: var(--green); }
+  .h-multi.moon { color: #ff88ff; text-shadow: 0 0 10px rgba(255,136,255,0.5); }
+
+  .h-mise { color: var(--dim); }
+
+  .h-result { font-weight: 700; }
+  .h-result.win { color: var(--green); }
+  .h-result.loss { color: var(--danger); }
+
+  .h-pnl { font-family: 'Orbitron', sans-serif; font-size: 13px; }
+  .h-pnl.pos { color: var(--green); }
+  .h-pnl.neg { color: var(--danger); }
+
+  .btn-del {
+    background: none;
+    border: none;
+    color: var(--dim);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 2px 6px;
+    transition: color 0.2s;
+  }
+  .btn-del:hover { color: var(--danger); }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px;
+    color: var(--dim);
+    font-size: 13px;
+    letter-spacing: 2px;
+  }
+
+  /* DISTRIBUTION */
+  .dist-section {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+
+  .dist-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+
+  .dist-bars { display: flex; flex-direction: column; gap: 10px; }
+
+  .dist-row {
+    display: grid;
+    grid-template-columns: 90px 1fr 50px;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+  }
+
+  .dist-label { color: var(--dim); text-align: right; }
+
+  .dist-bar-wrap {
+    height: 18px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .dist-bar {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .dist-bar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1));
+  }
+
+  .dist-pct { color: var(--text); text-align: right; font-size: 11px; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 20px 0;
+    color: var(--dim);
+    font-size: 10px;
+    letter-spacing: 2px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .input-row { grid-template-columns: 1fr 1fr; }
+    .btn-add { grid-column: span 2; }
+    .history-item { grid-template-columns: 30px 1fr 1fr auto; font-size: 12px; }
+    .h-mise, .h-result { display: none; }
+  }
+
+  /* Flash animation for new entry */
+  @keyframes flash {
+    0% { background: rgba(0,212,255,0.15); }
+    100% { background: transparent; }
+  }
+
+  .flash { animation: flash 0.8s ease; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="logo">AVIA<span>TOR</span> TRACKER</div>
+    <div class="subtitle">Outil d'analyse statistique personnelle</div>
+  </header>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Tours joués</div>
+      <div class="stat-value" id="stat-total">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">P&L Total</div>
+      <div class="stat-value" id="stat-pnl">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Taux victoire</div>
+      <div class="stat-value" id="stat-winrate">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Mult. moyen</div>
+      <div class="stat-value" id="stat-avg">—</div>
+    </div>
+  </div>
+
+  <!-- STRATEGY ALERT -->
+  <div class="strategy-box" id="strategy-alert">
+    <div class="icon">📊</div>
+    <div class="msg">Entre tes premiers tours pour voir l'analyse de ta stratégie en temps réel.</div>
+  </div>
+
+  <!-- INPUT -->
+  <div class="input-section">
+    <div class="input-title">▶ Nouveau Tour</div>
+    <div class="input-row">
+      <div class="field">
+        <label>Multiplicateur crash</label>
+        <input type="number" id="inp-multi" placeholder="ex: 2.45" step="0.01" min="1" autofocus>
+      </div>
+      <div class="field">
+        <label>Ma mise</label>
+        <input type="number" id="inp-mise" placeholder="ex: 100" step="1" min="0">
+      </div>
+      <div class="field">
+        <label>Résultat</label>
+        <select id="inp-result">
+          <option value="">— Résultat —</option>
+          <option value="win">✅ Gagné</option>
+          <option value="loss">❌ Perdu</option>
+          <option value="skip">⏭ Passé</option>
+        </select>
+      </div>
+      <button class="btn-add" onclick="addRound()">+ ADD</button>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="history-section">
+    <div class="history-header">
+      <div class="history-title">📋 Historique des tours</div>
+      <button class="btn-clear" onclick="clearAll()">⚠ RESET</button>
+    </div>
+    <div class="history-list" id="history-list">
+      <div class="empty-state">[ AUCUN TOUR ENREGISTRÉ ]</div>
+    </div>
+  </div>
+
+  <!-- DISTRIBUTION -->
+  <div class="dist-section">
+    <div class="dist-title">📈 Distribution des multiplicateurs</div>
+    <div class="dist-bars" id="dist-bars">
+      <div class="dist-row">
+        <div class="dist-label">Crash &lt; 1.5x</div>
+        <div class="dist-bar-wrap"><div class="dist-bar" id="bar-1" style="width:0%;background:#ff3a3a"></div></div>
+        <div class="dist-pct" id="pct-1">0%</div>
+      </div>
+      <div class="dist-row">
+        <div class="dist-label">1.5x — 2x</div>
+        <div class="dist-bar-wrap"><div class="dist-bar" id="bar-2" style="width:0%;background:#ffaa00"></div></div>
+        <div class="dist-pct" id="pct-2">0%</div>
+      </div>
+      <div class="dist-row">
+        <div class="dist-label">2x — 5x</div>
+        <div class="dist-bar-wrap"><div class="dist-bar" id="bar-3" style="width:0%;background:#00d4ff"></div></div>
+        <div class="dist-pct" id="pct-3">0%</div>
+      </div>
+      <div class="dist-row">
+        <div class="dist-label">5x — 10x</div>
+        <div class="dist-bar-wrap"><div class="dist-bar" id="bar-4" style="width:0%;background:#00ff88"></div></div>
+        <div class="dist-pct" id="pct-4">0%</div>
+      </div>
+      <div class="dist-row">
+        <div class="dist-label">+10x 🚀</div>
+        <div class="dist-bar-wrap"><div class="dist-bar" id="bar-5" style="width:0%;background:#ff88ff"></div></div>
+        <div class="dist-pct" id="pct-5">0%</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>AVIATOR TRACKER v1.0 — Données stockées localement sur votre appareil — Jeu responsable</footer>
+
+</div>
+
+<script>
+  // ── DATA ──────────────────────────────────────────────────────────────────
+  let rounds = JSON.parse(localStorage.getItem('aviator_rounds') || '[]');
+
+  function save() {
+    localStorage.setItem('aviator_rounds', JSON.stringify(rounds));
+  }
+
+  // ── ADD ROUND ─────────────────────────────────────────────────────────────
+  function addRound() {
+    const multiRaw = document.getElementById('inp-multi').value;
+    const miseRaw  = document.getElementById('inp-mise').value;
+    const result   = document.getElementById('inp-result').value;
+
+    const multi = parseFloat(multiRaw);
+    const mise  = parseFloat(miseRaw) || 0;
+
+    if (!multiRaw || isNaN(multi) || multi < 1) {
+      shake('inp-multi');
+      return;
+    }
+
+    // Compute P&L
+    let pnl = 0;
+    if (result === 'win')  pnl = mise * (multi - 1);  // simplified: won at crash multi
+    if (result === 'loss') pnl = -mise;
+
+    const round = {
+      id: Date.now(),
+      multi,
+      mise,
+      result,
+      pnl,
+      time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+    };
+
+    rounds.unshift(round);
+    save();
+    render();
+
+    // Reset inputs
+    document.getElementById('inp-multi').value = '';
+    document.getElementById('inp-mise').value  = '';
+    document.getElementById('inp-result').value = '';
+    document.getElementById('inp-multi').focus();
+  }
+
+  function deleteRound(id) {
+    rounds = rounds.filter(r => r.id !== id);
+    save();
+    render();
+  }
+
+  function clearAll() {
+    if (confirm('Effacer tout l\'historique ?')) {
+      rounds = [];
+      save();
+      render();
+    }
+  }
+
+  // ── RENDER ────────────────────────────────────────────────────────────────
+  function render() {
+    renderStats();
+    renderHistory();
+    renderDistribution();
+    renderStrategy();
+  }
+
+  function renderStats() {
+    const total = rounds.length;
+    const pnl   = rounds.reduce((s, r) => s + r.pnl, 0);
+    const played = rounds.filter(r => r.result === 'win' || r.result === 'loss');
+    const wins  = played.filter(r => r.result === 'win').length;
+    const avgMulti = total ? (rounds.reduce((s, r) => s + r.multi, 0) / total) : 0;
+
+    const winRate = played.length ? Math.round(wins / played.length * 100) : null;
+
+    const pnlEl = document.getElementById('stat-pnl');
+    pnlEl.textContent = (pnl >= 0 ? '+' : '') + pnl.toFixed(0);
+    pnlEl.className = 'stat-value ' + (pnl > 0 ? 'green' : pnl < 0 ? 'danger' : '');
+
+    document.getElementById('stat-total').textContent = total;
+    document.getElementById('stat-winrate').textContent = winRate !== null ? winRate + '%' : '—';
+    document.getElementById('stat-avg').textContent = avgMulti ? avgMulti.toFixed(2) + 'x' : '—';
+
+    const wrEl = document.getElementById('stat-winrate');
+    if (winRate !== null) {
+      wrEl.className = 'stat-value ' + (winRate >= 60 ? 'green' : winRate >= 40 ? 'warn' : 'danger');
+    }
+  }
+
+  function multiClass(m) {
+    if (m < 1.5) return 'low';
+    if (m < 2)   return 'mid';
+    if (m < 10)  return 'high';
+    return 'moon';
+  }
+
+  function renderHistory() {
+    const el = document.getElementById('history-list');
+    if (!rounds.length) {
+      el.innerHTML = '<div class="empty-state">[ AUCUN TOUR ENREGISTRÉ ]</div>';
+      return;
+    }
+
+    el.innerHTML = rounds.map((r, i) => {
+      const mc = multiClass(r.multi);
+      const rc = r.result === 'win' ? 'win' : r.result === 'loss' ? 'loss' : '';
+      const rl = r.result === 'win' ? '✅ WIN' : r.result === 'loss' ? '❌ LOSS' : '⏭ SKIP';
+      const pc = r.pnl > 0 ? 'pos' : r.pnl < 0 ? 'neg' : '';
+      const pl = r.pnl !== 0 ? (r.pnl > 0 ? '+' : '') + r.pnl.toFixed(0) : '—';
+
+      return `<div class="history-item ${i === 0 ? 'flash' : ''}">
+        <div class="h-num">#${rounds.length - i}</div>
+        <div class="h-multi ${mc}">${r.multi.toFixed(2)}x</div>
+        <div class="h-mise">${r.mise ? r.mise : '—'}</div>
+        <div class="h-result ${rc}">${rl}</div>
+        <div class="h-pnl ${pc}">${pl}</div>
+        <button class="btn-del" onclick="deleteRound(${r.id})">✕</button>
+      </div>`;
+    }).join('');
+  }
+
+  function renderDistribution() {
+    if (!rounds.length) return;
+    const n = rounds.length;
+    const zones = [
+      r => r.multi < 1.5,
+      r => r.multi >= 1.5 && r.multi < 2,
+      r => r.multi >= 2 && r.multi < 5,
+      r => r.multi >= 5 && r.multi < 10,
+      r => r.multi >= 10,
+    ];
+
+    zones.forEach((fn, i) => {
+      const count = rounds.filter(fn).length;
+      const pct = Math.round(count / n * 100);
+      document.getElementById(`bar-${i+1}`).style.width = pct + '%';
+      document.getElementById(`pct-${i+1}`).textContent = pct + '%';
+    });
+  }
+
+  function renderStrategy() {
+    const box = document.getElementById('strategy-alert');
+    const played = rounds.filter(r => r.result === 'win' || r.result === 'loss');
+    if (played.length < 5) {
+      box.className = 'strategy-box';
+      box.innerHTML = `<div class="icon">📊</div><div class="msg">Entre <strong>au moins 5 tours joués</strong> pour voir l'analyse de ta stratégie.</div>`;
+      return;
+    }
+
+    const wins = played.filter(r => r.result === 'win').length;
+    const rate = wins / played.length;
+    const pnl  = rounds.reduce((s, r) => s + r.pnl, 0);
+    const lowCrash = rounds.filter(r => r.multi < 1.5).length / rounds.length;
+
+    let cls = 'strategy-box';
+    let icon = '⚠️';
+    let msg = '';
+
+    if (pnl > 0 && rate >= 0.55) {
+      cls += ' ok'; icon = '✅';
+      msg = `<strong>Bonne discipline !</strong> Ton taux de victoire est de ${Math.round(rate*100)}% avec un P&L positif. Continue à cashout tôt.`;
+    } else if (pnl < 0 && lowCrash > 0.45) {
+      cls += ' bad'; icon = '🚨';
+      msg = `<strong>Attention !</strong> ${Math.round(lowCrash*100)}% des crashs sont sous 1.5x. Tu misais peut-être trop haut. Réduis ta mise ou passe ces tours.`;
+    } else if (rate < 0.4) {
+      cls += ' bad'; icon = '🚨';
+      msg = `<strong>Stop-Loss recommandé.</strong> Ton taux de victoire est seulement ${Math.round(rate*100)}%. Fais une pause ou baisse ton seuil de cashout.`;
+    } else {
+      msg = `<strong>Session neutre.</strong> P&L : ${pnl.toFixed(0)} — Taux : ${Math.round(rate*100)}%. Surveille ta tendance sur les prochains tours.`;
+    }
+
+    box.className = cls;
+    box.innerHTML = `<div class="icon">${icon}</div><div class="msg">${msg}</div>`;
+  }
+
+  // ── KEYBOARD SHORTCUT ─────────────────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && document.activeElement.closest('.input-section')) {
+      addRound();
+    }
+  });
+
+  // ── SHAKE ANIMATION ───────────────────────────────────────────────────────
+  function shake(id) {
+    const el = document.getElementById(id);
+    el.style.borderColor = 'var(--danger)';
+    el.style.boxShadow = '0 0 10px rgba(255,58,58,0.4)';
+    setTimeout(() => {
+      el.style.borderColor = '';
+      el.style.boxShadow = '';
+    }, 800);
+    el.focus();
+  }
+
+  // ── INIT ──────────────────────────────────────────────────────────────────
+  render();
+</script>
+</body>
+</html>
