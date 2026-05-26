@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AVIATOR TRACKER v3.3 Pro — Stable Edition</title>
+<title>AVIATOR TRACKER v4.0 — Ultra Stable</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -18,356 +18,386 @@
   --purple: #cc44ff;
   --text: #b8ddf0;
   --dim: #3a6a8a;
-  --glow-a: rgba(0,200,255,0.35);
-  --glow-d: rgba(255,45,45,0.35);
-  --glow-g: rgba(0,255,127,0.35);
 }
+
 *{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
 body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:15px;min-height:100vh;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,200,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.025) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;z-index:0;}
 
-.wrap{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:16px;}
+/* Fond dégradé subtil */
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,200,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.02) 1px,transparent 1px);background-size:40px 40px;z-index:-1;}
 
-/* HEADER */
-header{text-align:center;padding:20px 0;}
-.logo{font-family:'Orbitron',sans-serif;font-size:clamp(20px,5vw,36px);font-weight:900;letter-spacing:8px;color:var(--accent);text-shadow:0 0 20px var(--glow-a);}
+.wrap{max-width:1100px;margin:0 auto;padding:20px;}
+
+header{text-align:center;padding-bottom:30px;}
+.logo{font-family:'Orbitron';font-size:32px;font-weight:900;letter-spacing:6px;color:var(--accent);text-transform:uppercase;}
 .logo em{color:var(--danger);font-style:normal;}
-.badge-v3{display:inline-block;margin-left:10px;background:linear-gradient(135deg,var(--purple),var(--accent));color:#000;font-size:10px;padding:2px 8px;border-radius:3px;vertical-align:middle;}
 
-/* STATS GRID */
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));gap:10px;margin-bottom:16px;}
-.sc{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:12px;text-align:center;}
-.sc-label{font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:6px;}
-.sc-val{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:700;color:var(--accent);}
+/* Stats */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:12px;margin-bottom:20px;}
+.sc{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:15px;text-align:center;box-shadow: 0 4px 15px rgba(0,0,0,0.5);}
+.sc-label{font-size:10px;color:var(--dim);text-transform:uppercase;margin-bottom:5px;letter-spacing:1px;}
+.sc-val{font-family:'Orbitron';font-size:20px;font-weight:700;color:var(--accent);}
 
-/* PRED BLOCK - FIXED DESIGN */
-.pred-block{background:var(--panel);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:16px;}
-.pred-head{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-bottom:1px solid var(--border);background:rgba(204,68,255,0.05);}
-.pred-title{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:2px;color:var(--purple);}
-.pred-body{display:flex;flex-wrap:wrap;gap:0;}
-.pred-col{padding:20px;flex:1;min-width:280px;border-right:1px solid var(--border);}
-.pred-col:last-child{border-right:none;}
+/* Main Predictor */
+.pred-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;margin-bottom:20px;overflow:hidden;}
+.pred-header{background:rgba(204,68,255,0.1);padding:15px 20px;border-bottom:1px solid var(--border);font-family:'Orbitron';font-size:12px;color:var(--purple);}
+.pred-content{display:flex;flex-wrap:wrap;padding:20px;gap:20px;}
+.pred-main{flex:1;min-width:250px;text-align:center;display:flex;flex-direction:column;justify-content:center;}
+.pred-target{font-family:'Orbitron';font-size:72px;font-weight:900;margin:10px 0;}
+.sig-box{padding:10px;border-radius:4px;font-weight:bold;font-size:13px;letter-spacing:1px;}
 
-.pred-multiplier{font-family:'Orbitron',sans-serif;font-size:64px;font-weight:900;line-height:1;margin:10px 0;}
-.zone-low{color:var(--danger);text-shadow:0 0 20px var(--glow-d);}
-.zone-mid{color:var(--warn);text-shadow:0 0 20px rgba(255,179,0,0.3);}
-.zone-hi{color:var(--green);text-shadow:0 0 20px var(--glow-g);}
-.zone-moon{color:var(--purple);text-shadow:0 0 20px rgba(204,68,255,0.4);}
-.zone-wait{color:var(--dim);}
+/* Inputs */
+.input-section{display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:20px;margin-bottom:20px;}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:20px;}
+.card-title{font-family:'Orbitron';font-size:11px;color:var(--accent);margin-bottom:15px;letter-spacing:2px;}
 
-.conf-bar-wrap{height:8px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden;margin:4px 0 10px;position:relative;}
-.conf-bar{height:100%;transition:width 0.5s;}
-.conf-ci-line{position:absolute;top:0;height:100%;background:rgba(255,255,255,0.1);border-left:1px dashed #fff;border-right:1px dashed #fff;pointer-events:none;}
+.mise-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:15px;}
+.m-btn{background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:10px;border-radius:4px;cursor:pointer;font-family:'Share Tech Mono';}
+.m-btn.active{background:var(--accent);color:#000;border-color:var(--accent);}
 
-/* INPUTS */
-.cols{display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:16px;margin-bottom:16px;}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
-.card-head{padding:12px 16px;border-bottom:1px solid var(--border);background:rgba(0,200,255,0.03);color:var(--accent);font-family:'Orbitron';font-size:10px;letter-spacing:2px;}
-.card-body{padding:16px;}
+input{width:100%;background:var(--bg);border:1px solid var(--border);color:#fff;padding:12px;border-radius:4px;font-family:'Share Tech Mono';font-size:18px;margin-bottom:15px;}
+.res-btns{display:flex;gap:10px;margin-bottom:15px;}
+.res-btn{flex:1;padding:12px;border-radius:4px;border:1px solid var(--border);background:var(--panel2);color:var(--dim);cursor:pointer;font-weight:bold;}
+.res-btn.active.win{border-color:var(--green);color:var(--green);background:rgba(0,255,127,0.1);}
+.res-btn.active.loss{border-color:var(--danger);color:var(--danger);background:rgba(255,45,45,0.1);}
+.res-btn.active.skip{border-color:var(--warn);color:var(--warn);background:rgba(255,179,0,0.1);}
+.add-btn{width:100%;padding:15px;background:var(--accent);color:#000;border:none;border-radius:4px;font-family:'Orbitron';font-weight:900;cursor:pointer;}
 
-.mise-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
-.mise-btn{background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:8px;color:var(--text);cursor:pointer;text-align:center;font-family:'Share Tech Mono';}
-.mise-btn.active{background:var(--accent);color:#000;font-weight:bold;}
+/* TABLEAU DE DISTRIBUTION (FIXÉ) */
+.dist-card{background:var(--panel);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-top:20px;}
+.dist-table{width:100%;padding:15px;}
+.dist-header{display:flex;padding:10px;border-bottom:1px solid var(--border);color:var(--dim);font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:bold;}
+.dist-row{display:flex;align-items:center;padding:12px 10px;border-bottom:1px solid rgba(255,255,255,0.03);}
+.dist-row:last-child{border-bottom:none;}
 
-input[type="number"]{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:10px;color:var(--text);font-family:'Share Tech Mono';font-size:16px;margin-bottom:10px;}
-.result-btns{display:flex;gap:8px;margin-bottom:12px;}
-.rbtn{flex:1;padding:10px;border:1px solid var(--border);border-radius:4px;background:var(--panel2);color:var(--dim);cursor:pointer;font-weight:bold;}
-.rbtn.sel-win{border-color:var(--green);color:var(--green);background:rgba(0,255,127,0.05);}
-.rbtn.sel-loss{border-color:var(--danger);color:var(--danger);background:rgba(255,45,45,0.05);}
-.rbtn.sel-skip{border-color:var(--warn);color:var(--warn);background:rgba(255,179,0,0.05);}
+.col-label{width:120px;font-size:13px;color:var(--text);}
+.col-bar{flex:1;padding:0 15px;}
+.col-pct{width:50px;text-align:right;font-family:'Share Tech Mono';color:var(--accent);}
+.col-theo{width:80px;text-align:right;font-size:11px;color:var(--dim);}
+.col-chi{width:100px;text-align:right;font-family:'Share Tech Mono';font-size:12px;}
 
-.btn-add{width:100%;background:var(--accent);color:#000;border:none;border-radius:4px;padding:14px;font-family:'Orbitron';font-weight:bold;cursor:pointer;letter-spacing:2px;}
+.bar-bg{width:100%;height:14px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;border:1px solid rgba(255,255,255,0.05);}
+.bar-fill{height:100%;transition:width 0.6s ease-in-out;}
 
-/* UTILS */
-.history-list{max-height:300px;overflow-y:auto;}
-.hitem{display:grid;grid-template-columns:40px 1fr 1fr 1fr 40px;padding:10px;border-bottom:1px solid rgba(255,255,255,0.05);align-items:center;}
-.conseil{padding:15px;border-left:4px solid var(--warn);line-height:1.6;font-size:14px;}
-.streak-box{display:flex;gap:5px;flex-wrap:wrap;padding:10px;}
-.streak-dot{width:30px;height:30px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;font-family:'Share Tech Mono';background:var(--panel2);border:1px solid var(--border);}
+/* Colors Classes */
+.c-red{color:var(--danger);} .b-red{background:var(--danger);}
+.c-warn{color:var(--warn);} .b-warn{background:var(--warn);}
+.c-green{color:var(--green);} .b-green{background:var(--green);}
+.c-purp{color:var(--purple);} .b-purp{background:var(--purple);}
+.c-blue{color:var(--accent);} .b-blue{background:var(--accent);}
 
-.proba-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:12px;}
-.proba-bar-bg{flex:1;height:12px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden;}
-.proba-bar-fill{height:100%;transition:width 0.4s;}
+/* History */
+.h-list{max-height:250px;overflow-y:auto;}
+.h-row{display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;}
 </style>
 </head>
 <body>
+
 <div class="wrap">
+  <header>
+    <div class="logo">AVIA<em>TOR</em> ANALYSER v4.0</div>
+    <div style="font-size:10px; color:var(--dim); letter-spacing:3px; margin-top:5px;">SYSTEME DE TRACKING DE VARIANCE PRO</div>
+  </header>
 
-<header>
-  <div class="logo">AVIA<em>TOR</em> TRACKER <span class="badge-v3">v3.3 Stable</span></div>
-  <div class="tagline">Analyse des Cycles RNG & Dispersion de Variance</div>
-</header>
-
-<div class="stats-grid">
-  <div class="sc"><div class="sc-label">Tours</div><div class="sc-val" id="s-total">0</div></div>
-  <div class="sc"><div class="sc-label">P&L (FCFA)</div><div class="sc-val" id="s-pnl">0</div></div>
-  <div class="sc"><div class="sc-label">Capital</div><div class="sc-val" id="s-bankroll">50 000</div></div>
-  <div class="sc"><div class="sc-label">Win Rate</div><div class="sc-val" id="s-wr">0%</div></div>
-  <div class="sc"><div class="sc-label">Régularité</div><div class="sc-val" id="s-reliability">0%</div></div>
-</div>
-
-<!-- PREDICTION BLOCK -->
-<div class="pred-block">
-  <div class="pred-head">
-    <div class="pred-title">🎯 FOCUS RNG : ANALYSE DES CYCLES RÉCENTS</div>
-    <div id="pred-model-badge" style="font-size:10px; color:var(--dim)">MODE : ATTENTE</div>
+  <div class="stats-grid">
+    <div class="sc"><div class="sc-label">Total Tours</div><div id="st-total" class="sc-val">0</div></div>
+    <div class="sc"><div class="sc-label">P&L Session</div><div id="st-pnl" class="sc-val">0</div></div>
+    <div class="sc"><div class="sc-label">Win Rate</div><div id="st-wr" class="sc-val">0%</div></div>
+    <div class="sc"><div class="sc-label">Fiabilité</div><div id="st-rel" class="sc-val">0%</div></div>
   </div>
-  <div class="pred-body">
-    <div class="pred-col" style="text-align:center">
-      <div class="sc-label">Cible de Cashout Suggérée</div>
-      <div id="pred-mult" class="pred-multiplier zone-wait">?</div>
-      <div id="pred-signal" class="pred-signal sig-wait">Calibrage (0/3)</div>
-    </div>
-    <div class="pred-col">
-      <div class="sc-label">Dispersion Réactive (Fenêtre N=10)</div>
-      <div id="markov-bars">
-        <!-- Généré par JS -->
+
+  <!-- PREDICTION BLOCK -->
+  <div class="pred-card">
+    <div class="pred-header">MODULE DE PRÉDICTION RÉACTIF (MOMENTUM RNG)</div>
+    <div class="pred-content">
+      <div class="pred-main">
+        <div class="sc-label">Cible de Cashout Suggérée</div>
+        <div id="p-target" class="pred-target" style="color:var(--dim)">?</div>
+        <div id="p-sig" class="sig-box" style="background:var(--panel2); color:var(--dim)">EN ATTENTE DE DONNÉES</div>
+      </div>
+      <div style="flex:1; min-width:280px; padding:10px; border-left:1px solid var(--border)">
+        <div class="sc-label" style="margin-bottom:15px;">Mise Conseillée</div>
+        <div id="p-mise" style="font-family:'Orbitron'; font-size:32px; color:var(--green); margin-bottom:10px;">—</div>
+        <div id="p-note" style="font-size:12px; color:var(--dim); line-height:1.5;">Veuillez entrer au moins 3 scores pour démarrer l'analyse du cycle.</div>
       </div>
     </div>
-    <div class="pred-col">
-      <div class="sc-label">Mise Conseillée</div>
-      <div id="kelly-amount" class="pred-multiplier" style="font-size:32px; color:var(--green)">—</div>
-      <div id="kelly-note" style="font-size:11px; color:var(--dim)">Veuillez enregistrer des scores.</div>
-    </div>
   </div>
-</div>
 
-<div class="cols">
-  <!-- INPUT CARD -->
-  <div class="card">
-    <div class="card-head">SAISIE DES DONNÉES</div>
-    <div class="card-body">
-      <div class="sc-label" style="margin-bottom:8px">Mise Rapide</div>
+  <div class="input-section">
+    <!-- INPUT -->
+    <div class="card">
+      <div class="card-title">SAISIE DES DONNÉES</div>
+      <div class="sc-label" style="margin-bottom:8px;">Mise rapide</div>
       <div class="mise-grid">
-        <div class="mise-btn" onclick="selectMise(100)">100</div>
-        <div class="mise-btn" onclick="selectMise(500)">500</div>
-        <div class="mise-btn" onclick="selectMise(1000)">1K</div>
-        <div class="mise-btn" onclick="selectMise(2000)">2K</div>
-        <div class="mise-btn" onclick="selectMise(5000)">5K</div>
-        <div class="mise-btn" onclick="selectMise(10000)">10K</div>
+        <div class="m-btn" onclick="setMise(100)">100</div>
+        <div class="m-btn" onclick="setMise(500)">500</div>
+        <div class="m-btn" onclick="setMise(1000)">1 000</div>
+        <div class="m-btn" onclick="setMise(2000)">2 000</div>
+        <div class="m-btn" onclick="setMise(5000)">5 000</div>
+        <div class="m-btn" onclick="setMise(10000)">10 000</div>
       </div>
-      <input type="number" id="inp-mise" placeholder="Mise (F)">
-      <div class="sc-label" style="margin-bottom:8px">Score Crash Constaté</div>
-      <input type="number" id="inp-multi" placeholder="Ex: 2.45" step="0.01">
-      <div class="result-btns">
-        <button class="rbtn" id="rb-win" onclick="setResult('win')">GAGNÉ</button>
-        <button class="rbtn" id="rb-loss" onclick="setResult('loss')">PERDU</button>
-        <button class="rbtn" id="rb-skip" onclick="setResult('skip')">PASSÉ</button>
+      <input type="number" id="i-mise" placeholder="Montant misé (F)">
+      <div class="sc-label" style="margin-bottom:8px;">Multiplicateur Crash</div>
+      <input type="number" id="i-multi" placeholder="Ex: 1.85" step="0.01">
+      
+      <div class="res-btns">
+        <div id="btn-win" class="res-btn" onclick="setRes('win')">GAGNÉ</div>
+        <div id="btn-loss" class="res-btn" onclick="setRes('loss')">PERDU</div>
+        <div id="btn-skip" class="res-btn" onclick="setRes('skip')">PASSÉ</div>
       </div>
-      <button class="btn-add" onclick="addRound()">ENREGISTRER</button>
+      <button class="add-btn" onclick="addRound()">ENREGISTRER LE TOUR</button>
+    </div>
+
+    <!-- CONSEIL -->
+    <div class="card">
+      <div class="card-title">ANALYSE DU CYCLE RNG</div>
+      <div id="c-box" class="conseil">
+        L'algorithme analyse actuellement les tendances de la table. Enregistrez les derniers crashs pour identifier si la machine est en phase d'aspiration.
+      </div>
+      <div style="margin-top:20px;">
+        <div class="sc-label" style="margin-bottom:10px;">Séquence Récente</div>
+        <div id="streak-container" style="display:flex; gap:5px; flex-wrap:wrap;"></div>
+      </div>
     </div>
   </div>
 
-  <!-- CONSEIL CARD -->
-  <div class="card">
-    <div class="card-head">ANALYSE DU MOMENTUM</div>
-    <div id="conseil-box" class="conseil">
-      En attente de données pour définir la phase du RNG (Aspiration ou Dispersion).
+  <!-- HISTORIQUE -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-title" style="display:flex; justify-content:space-between">
+      <span>HISTORIQUE COMPLET</span>
+      <span onclick="resetAll()" style="color:var(--danger); cursor:pointer; font-size:10px;">TOUT EFFACER</span>
     </div>
-    <div class="card-body" style="border-top:1px solid var(--border)">
-        <div class="sc-label">Probabilités Temps Réel</div>
-        <div id="proba-live-container"></div>
+    <div id="h-list" class="h-list"></div>
+  </div>
+
+  <!-- DISTRIBUTION TABLE (FIXED) -->
+  <div class="dist-card">
+    <div class="pred-header">📊 DÉVIATION DU FLUX : OBSERVÉ VS THÉORIE</div>
+    <div class="dist-table">
+      <div class="dist-header">
+        <div style="width:120px">Zone Crash</div>
+        <div style="flex:1; padding-left:15px;">Répartition</div>
+        <div style="width:50px; text-align:right">Obs.</div>
+        <div style="width:80px; text-align:right">Théorie</div>
+        <div style="width:100px; text-align:right">Chi²</div>
+      </div>
+
+      <!-- Row 1 -->
+      <div class="dist-row">
+        <div class="col-label">Crash < 1.5x</div>
+        <div class="col-bar"><div class="bar-bg"><div id="b1" class="bar-fill b-red" style="width:0%"></div></div></div>
+        <div id="p1" class="col-pct">0%</div>
+        <div class="col-theo">35.3%</div>
+        <div id="x1" class="col-chi c-red">—</div>
+      </div>
+      <!-- Row 2 -->
+      <div class="dist-row">
+        <div class="col-label">1.5x — 2.0x</div>
+        <div class="col-bar"><div class="bar-bg"><div id="b2" class="bar-fill b-warn" style="width:0%"></div></div></div>
+        <div id="p2" class="col-pct">0%</div>
+        <div class="col-theo">16.2%</div>
+        <div id="x2" class="col-chi">—</div>
+      </div>
+      <!-- Row 3 -->
+      <div class="dist-row">
+        <div class="col-label">2.0x — 3.0x</div>
+        <div class="col-bar"><div class="bar-bg"><div id="b3" class="bar-fill b-blue" style="width:0%"></div></div></div>
+        <div id="p3" class="col-pct">0%</div>
+        <div class="col-theo">16.2%</div>
+        <div id="x3" class="col-chi">—</div>
+      </div>
+      <!-- Row 4 -->
+      <div class="dist-row">
+        <div class="col-label">3.0x — 5.0x</div>
+        <div class="col-bar"><div class="bar-bg"><div id="b4" class="bar-fill b-green" style="width:0%"></div></div></div>
+        <div id="p4" class="col-pct">0%</div>
+        <div class="col-theo">12.9%</div>
+        <div id="x4" class="col-chi">—</div>
+      </div>
+      <!-- Row 5 -->
+      <div class="dist-row">
+        <div class="col-label">5.0x — 10.0x</div>
+        <div class="col-bar"><div class="bar-bg"><div id="b5" class="bar-fill b-purp" style="width:0%"></div></div></div>
+        <div id="p5" class="col-pct">0%</div>
+        <div class="col-theo">9.7%</div>
+        <div id="x5" class="col-chi">—</div>
+      </div>
+      <!-- Row 6 -->
+      <div class="dist-row">
+        <div class="col-label">Haut > 10x 🚀</div>
+        <div class="col-bar"><div class="bar-bg"><div id="b6" class="bar-fill b-purp" style="width:0%"></div></div></div>
+        <div id="p6" class="col-pct">0%</div>
+        <div class="col-theo">9.7%</div>
+        <div id="x6" class="col-chi">—</div>
+      </div>
     </div>
   </div>
-</div>
-
-<div class="card" style="margin-bottom:16px;">
-    <div class="card-head">DERNIÈRES SÉQUENCES</div>
-    <div id="streak-box" class="streak-box"></div>
-</div>
-
-<div class="card">
-  <div class="card-head" style="display:flex; justify-content:space-between">
-    <span>HISTORIQUE</span>
-    <button onclick="clearAll()" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:10px;">RESET ALL</button>
-  </div>
-  <div id="history-list" class="history-list"></div>
-</div>
 
 </div>
 
 <script>
-// --- CONFIG & STATE ---
-let rounds = JSON.parse(localStorage.getItem('av3_db') || '[]');
-let selectedMise = 0;
-let selectedResult = '';
-let bankrollInitial = 50000;
+// --- STATE ---
+let db = JSON.parse(localStorage.getItem('aviator_v4_db') || '[]');
+let currentRes = '';
+let capital = 50000;
 
-const THEO = [0.35, 0.33, 0.16, 0.16]; // Zones: <1.5, 1.5-3, 3-6, >6
+const THEO_6 = [0.353, 0.162, 0.162, 0.129, 0.097, 0.097];
 
-// --- CORE FUNCTIONS ---
-function save() { localStorage.setItem('av3_db', JSON.stringify(rounds)); }
+// --- CORE ---
+function save() { localStorage.setItem('aviator_v4_db', JSON.stringify(db)); }
 
-function selectMise(v) {
-    selectedMise = v;
-    document.getElementById('inp-mise').value = v;
-    document.querySelectorAll('.mise-btn').forEach(b => {
-        b.classList.toggle('active', parseInt(b.innerText.replace('K','000')) === v);
-    });
+function setMise(v) {
+  document.getElementById('i-mise').value = v;
+  document.querySelectorAll('.m-btn').forEach(b => b.classList.toggle('active', parseInt(b.innerText.replace(' ','')) === v));
 }
 
-function setResult(r) {
-    selectedResult = r;
-    document.querySelectorAll('.rbtn').forEach(b => b.className = 'rbtn');
-    document.getElementById('rb-' + r).classList.add('sel-' + r);
+function setRes(r) {
+  currentRes = r;
+  document.querySelectorAll('.res-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-'+r).classList.add('active', r);
 }
 
 function addRound() {
-    const multi = parseFloat(document.getElementById('inp-multi').value);
-    const mise = parseFloat(document.getElementById('inp-mise').value) || 0;
+  const multi = parseFloat(document.getElementById('i-multi').value);
+  const mise = parseFloat(document.getElementById('i-mise').value) || 0;
 
-    if (!multi || multi < 1) { alert("Entrez un multiplicateur valide"); return; }
-    if (selectedResult === '') { alert("Sélectionnez GAGNÉ, PERDU ou PASSÉ"); return; }
+  if(!multi || multi < 1) { alert("Multiplicateur invalide"); return; }
+  if(!currentRes) { alert("Sélectionnez GAGNÉ ou PERDU"); return; }
 
-    let pnl = 0;
-    if (selectedResult === 'win') pnl = mise * (multi - 1);
-    if (selectedResult === 'loss') pnl = -mise;
+  let pnl = 0;
+  if(currentRes === 'win') pnl = mise * (multi - 1);
+  if(currentRes === 'loss') pnl = -mise;
 
-    rounds.unshift({
-        id: Date.now(),
-        multi: multi,
-        mise: mise,
-        result: selectedResult,
-        pnl: pnl,
-        time: new Date().toLocaleTimeString()
-    });
+  db.unshift({
+    id: Date.now(),
+    multi: multi,
+    mise: mise,
+    res: currentRes,
+    pnl: pnl,
+    time: new Date().toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'})
+  });
 
-    save();
-    render();
-    
-    // Reset
-    document.getElementById('inp-multi').value = '';
-    selectedResult = '';
-    document.querySelectorAll('.rbtn').forEach(b => b.className = 'rbtn');
-    document.getElementById('inp-multi').focus();
+  save();
+  render();
+
+  // Reset
+  document.getElementById('i-multi').value = '';
+  currentRes = '';
+  document.querySelectorAll('.res-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('i-multi').focus();
 }
 
-function clearAll() { if(confirm("Supprimer ?")) { rounds = []; save(); render(); } }
+function resetAll() { if(confirm("Supprimer tout l'historique ?")) { db = []; save(); render(); } }
 
-function getState(v) {
-    if (v < 1.5) return 0;
-    if (v < 3) return 1;
-    if (v < 6) return 2;
-    return 3;
-}
+function deleteItem(id) { db = db.filter(x => x.id !== id); save(); render(); }
 
-// --- RENDER ENGINE ---
+// --- RENDERING ---
 function render() {
-    const n = rounds.length;
-    const pnl = rounds.reduce((s, r) => s + r.pnl, 0);
-    const played = rounds.filter(r => r.result !== 'skip');
-    const wins = played.filter(r => r.result === 'win').length;
-    const wr = played.length ? Math.round((wins / played.length) * 100) : 0;
+  const n = db.length;
+  const pnl = db.reduce((s, x) => s + x.pnl, 0);
+  const played = db.filter(x => x.res !== 'skip');
+  const wins = played.filter(x => x.res === 'win').length;
+  const wr = played.length ? Math.round((wins / played.length) * 100) : 0;
 
-    // UI Stats
-    document.getElementById('s-total').innerText = n;
-    document.getElementById('s-pnl').innerText = Math.round(pnl).toLocaleString();
-    document.getElementById('s-bankroll').innerText = (bankrollInitial + pnl).toLocaleString();
-    document.getElementById('s-wr').innerText = wr + "%";
+  document.getElementById('st-total').innerText = n;
+  document.getElementById('st-pnl').innerText = Math.round(pnl).toLocaleString();
+  document.getElementById('st-pnl').style.color = pnl >= 0 ? 'var(--green)' : 'var(--danger)';
+  document.getElementById('st-bankroll').innerText = (capital + pnl).toLocaleString() + " F";
+  document.getElementById('st-wr').innerText = wr + "%";
 
-    renderHistory();
-    renderStreaks();
-    renderAnalysis(n, wr, pnl);
+  updateHistory();
+  updatePredictor(n, pnl, wr);
+  updateDistribution(n);
 }
 
-function renderHistory() {
-    const list = document.getElementById('history-list');
-    if (rounds.length === 0) { list.innerHTML = '<div style="padding:20px; text-align:center; color:var(--dim)">Aucune donnée</div>'; return; }
+function updateHistory() {
+  const list = document.getElementById('h-list');
+  if(!db.length) { list.innerHTML = '<div style="padding:20px; text-align:center; color:var(--dim)">Aucun tour enregistré</div>'; return; }
+  
+  list.innerHTML = db.map(x => `
+    <div class="h-row">
+      <span style="color:var(--dim); width:50px;">${x.time}</span>
+      <b style="color:${x.multi >= 2 ? 'var(--green)' : 'var(--danger)'}; width:60px;">${x.multi.toFixed(2)}x</b>
+      <span style="width:80px; text-align:right;">${x.mise} F</span>
+      <b style="color:${x.pnl >= 0 ? 'var(--green)' : 'var(--danger)'}; width:100px; text-align:right;">${x.pnl >= 0 ? '+' : ''}${Math.round(x.pnl)}</b>
+      <span onclick="deleteItem(${x.id})" style="cursor:pointer; color:var(--dim)">✕</span>
+    </div>
+  `).join('');
+
+  // Streak icons
+  const sCont = document.getElementById('streak-container');
+  sCont.innerHTML = db.slice(0,15).reverse().map(x => {
+    let col = x.multi < 1.5 ? 'var(--danger)' : x.multi < 3 ? 'var(--warn)' : 'var(--green)';
+    return `<div style="width:25px; height:25px; background:var(--panel2); border:1px solid ${col}; color:${col}; font-size:8px; display:flex; align-items:center; justify-content:center; border-radius:3px; font-weight:bold;">${x.multi.toFixed(1)}</div>`;
+  }).join('');
+}
+
+function updatePredictor(n, pnl, wr) {
+  const pMult = document.getElementById('p-target');
+  const pSig = document.getElementById('p-sig');
+  const pMise = document.getElementById('p-mise');
+  const pNote = document.getElementById('p-note');
+
+  if(n < 3) return;
+
+  const last5 = db.slice(0, 5);
+  const crashes = last5.filter(x => x.multi < 1.5).length;
+  const flyers = last5.filter(x => x.multi > 3).length;
+
+  let target = 1.65;
+  let phase = "CYCLE NORMAL";
+  let col = "var(--green)";
+
+  if(crashes >= 3) {
+    target = 1.25; phase = "ASPIRATION (DANGER)"; col = "var(--danger)";
+  } else if(flyers >= 2) {
+    target = 3.50; phase = "DISTRIBUTION (CHAUD)"; col = "var(--purple)";
+  }
+
+  pMult.innerText = target.toFixed(2) + "x";
+  pMult.style.color = col;
+  pSig.innerText = phase;
+  pSig.style.background = col === "var(--green)" ? "rgba(0,255,127,0.1)" : col.replace(')', ', 0.1)');
+  pSig.style.color = col;
+
+  const mAmount = Math.max(100, Math.round((capital + pnl) * (phase === "ASPIRATION (DANGER)" ? 0.005 : 0.02) / 100) * 100);
+  pMise.innerText = mAmount.toLocaleString() + " F";
+  pNote.innerText = phase === "ASPIRATION (DANGER)" ? "La machine absorbe. Réduction de mise de sécurité activée." : "Flux de variance stable. Suivez la gestion de 2%.";
+  
+  document.getElementById('st-rel').innerText = (Math.min(100, n * 5)) + "%";
+}
+
+function updateDistribution(n) {
+  const zones = [
+    x => x.multi < 1.5,
+    x => x.multi >= 1.5 && x.multi < 2,
+    x => x.multi >= 2 && x.multi < 3,
+    x => x.multi >= 3 && x.multi < 5,
+    x => x.multi >= 5 && x.multi < 10,
+    x => x.multi >= 10
+  ];
+
+  zones.forEach((check, i) => {
+    const count = db.filter(check).length;
+    const pct = n > 0 ? (count / n) * 100 : 0;
     
-    list.innerHTML = rounds.map(r => `
-        <div class="hitem">
-            <span style="font-size:10px; color:var(--dim)">${r.time.split(':')[0]}:${r.time.split(':')[1]}</span>
-            <b style="color:${r.multi >= 2 ? 'var(--green)' : 'var(--danger)'}">${r.multi.toFixed(2)}x</b>
-            <span style="font-size:12px">${r.mise} F</span>
-            <span style="font-size:11px; color:${r.pnl >= 0 ? 'var(--green)' : 'var(--danger)'}">${r.pnl >= 0 ? '+' : ''}${Math.round(r.pnl)}</span>
-            <button onclick="deleteItem(${r.id})" style="background:none; border:none; color:var(--dim); cursor:pointer">✕</button>
-        </div>
-    `).join('');
-}
+    document.getElementById('b' + (i+1)).style.width = pct + "%";
+    document.getElementById('p' + (i+1)).innerText = Math.round(pct) + "%";
 
-function deleteItem(id) {
-    rounds = rounds.filter(r => r.id !== id);
-    save(); render();
-}
-
-function renderStreaks() {
-    const box = document.getElementById('streak-box');
-    const last20 = rounds.slice(0, 20).reverse();
-    box.innerHTML = last20.map(r => {
-        let color = r.multi < 1.5 ? 'var(--danger)' : r.multi < 3 ? 'var(--warn)' : 'var(--green)';
-        return `<div class="streak-dot" style="border-color:${color}; color:${color}">${r.multi.toFixed(1)}</div>`;
-    }).join('');
-}
-
-function renderAnalysis(n, wr, pnl) {
-    const multDisplay = document.getElementById('pred-mult');
-    const sigDisplay = document.getElementById('pred-signal');
-    const markovBox = document.getElementById('markov-bars');
-    const kellyDisplay = document.getElementById('kelly-amount');
-    const kellyNote = document.getElementById('kelly-note');
-    const conseilBox = document.getElementById('conseil-box');
-
-    if (n < 3) {
-        multDisplay.innerText = "?";
-        sigDisplay.innerText = `Attente (${n}/3)`;
-        return;
+    if(n >= 10) {
+        const expected = n * THEO_6[i];
+        const chi = Math.pow(count - expected, 2) / expected;
+        const chiEl = document.getElementById('x' + (i+1));
+        chiEl.innerText = chi.toFixed(2);
+        chiEl.style.color = chi > 4 ? 'var(--danger)' : chi > 2 ? 'var(--warn)' : 'var(--dim)';
     }
-
-    // Phase RNG
-    const last5 = rounds.slice(0, 5);
-    const coldCount = last5.filter(r => r.multi < 1.5).length;
-    const hotCount = last5.filter(r => r.multi > 3).length;
-    
-    let target = 1.70;
-    let phase = "NEUTRE";
-    let phaseColor = "var(--green)";
-
-    if (coldCount >= 3) {
-        phase = "ASPIRATION"; phaseColor = "var(--danger)"; target = 1.20;
-    } else if (hotCount >= 2) {
-        phase = "DISTRIBUTION"; phaseColor = "var(--purple)"; target = 3.20;
-    }
-
-    multDisplay.innerText = target.toFixed(2) + "x";
-    multDisplay.className = "pred-multiplier " + (target > 3 ? "zone-moon" : target < 1.5 ? "zone-low" : "zone-hi");
-    sigDisplay.innerText = "PHASE : " + phase;
-    sigDisplay.style.color = phaseColor;
-
-    // Markov Simulé
-    const states = [0,0,0,0];
-    rounds.slice(0, 10).forEach(r => states[getState(r.multi)]++);
-    const labels = ["Crash","Bas","Moyen","Haut"];
-    const colors = ["var(--danger)","var(--warn)","var(--green)","var(--purple)"];
-    
-    markovBox.innerHTML = states.map((s, i) => {
-        let pct = (s / Math.min(n, 10)) * 100;
-        return `
-            <div style="font-size:10px; display:flex; justify-content:space-between; margin-bottom:2px">
-                <span>${labels[i]}</span><span>${Math.round(pct)}%</span>
-            </div>
-            <div class="conf-bar-wrap"><div class="conf-bar" style="width:${pct}%; background:${colors[i]}"></div></div>
-        `;
-    }).join('');
-
-    // Mise
-    if (phase === "ASPIRATION") {
-        kellyDisplay.innerText = "100 F";
-        kellyNote.innerText = "Machine fermée. Protection de bankroll.";
-    } else {
-        let rec = Math.max(100, Math.round((bankrollInitial + pnl) * 0.02 / 100) * 100);
-        kellyDisplay.innerText = rec.toLocaleString() + " F";
-        kellyNote.innerText = "Cycle favorable détecté.";
-    }
-
-    // Conseil
-    conseilBox.innerHTML = `<strong>Cycle ${phase}</strong><br>La machine est en mode ${phase.toLowerCase()}. ${phase === 'ASPIRATION' ? 'Prudence extrême, cashout rapide.' : 'Opportunité de chercher des paliers.'}`;
-    conseilBox.style.borderLeftColor = phaseColor;
+  });
 }
 
 // --- INIT ---
-document.addEventListener('keydown', e => { if (e.key === 'Enter') addRound(); });
+document.addEventListener('keydown', e => { if(e.key === 'Enter') addRound(); });
 render();
 </script>
+
 </body>
 </html>
