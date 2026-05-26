@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AVIATOR TRACKER v3.2 Chaos — Cockpit Probabiliste</title>
+<title>AVIATOR TRACKER v3.3 Pro — Stable Edition</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -26,997 +26,348 @@
 html{scroll-behavior:smooth;}
 body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:15px;min-height:100vh;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,200,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.025) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;z-index:0;}
-body::after{content:'';position:fixed;top:-40%;left:-20%;width:70%;height:70%;background:radial-gradient(ellipse,rgba(0,150,255,0.04) 0%,transparent 70%);pointer-events:none;z-index:0;}
-.wrap{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:16px;}
+
+.wrap{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:16px;}
 
 /* HEADER */
-header{text-align:center;padding:28px 0 18px;margin-bottom:20px;}
-.logo{font-family:'Orbitron',sans-serif;font-size:clamp(22px,5vw,40px);font-weight:900;letter-spacing:10px;color:var(--accent);text-shadow:0 0 25px var(--glow-a),0 0 60px rgba(0,200,255,0.15);animation:logopulse 4s ease-in-out infinite;}
+header{text-align:center;padding:20px 0;}
+.logo{font-family:'Orbitron',sans-serif;font-size:clamp(20px,5vw,36px);font-weight:900;letter-spacing:8px;color:var(--accent);text-shadow:0 0 20px var(--glow-a);}
 .logo em{color:var(--danger);font-style:normal;}
-.tagline{font-size:11px;letter-spacing:4px;color:var(--dim);margin-top:5px;text-transform:uppercase;}
-.logo-line{width:120px;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);margin:12px auto 0;}
-.badge-v3{display:inline-block;margin-left:12px;background:linear-gradient(135deg,var(--purple),var(--accent));color:#000;font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;letter-spacing:2px;vertical-align:middle;}
-@keyframes logopulse{0%,100%{text-shadow:0 0 25px var(--glow-a),0 0 60px rgba(0,200,255,0.15);}50%{text-shadow:0 0 40px var(--glow-a),0 0 100px rgba(0,200,255,0.3);}}
+.badge-v3{display:inline-block;margin-left:10px;background:linear-gradient(135deg,var(--purple),var(--accent));color:#000;font-size:10px;padding:2px 8px;border-radius:3px;vertical-align:middle;}
 
-/* STATS */
-.stats-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:16px;}
-.sc{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:12px 10px;text-align:center;position:relative;overflow:hidden;transition:border-color .3s,transform .2s;}
-.sc:hover{border-color:var(--accent);transform:translateY(-2px);}
-.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.6;}
+/* STATS GRID */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));gap:10px;margin-bottom:16px;}
+.sc{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:12px;text-align:center;}
 .sc-label{font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:6px;}
-.sc-val{font-family:'Orbitron',sans-serif;font-size:clamp(12px,1.9vw,18px);font-weight:700;color:var(--accent);}
-.sc-val.red{color:var(--danger);}.sc-val.grn{color:var(--green);}.sc-val.org{color:var(--warn);}.sc-val.pur{color:var(--purple);}
+.sc-val{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:700;color:var(--accent);}
 
-/* FIABILITE BADGE */
-.reliability-bar{
-  width:100%;height:6px;background:rgba(255,255,255,0.04);border-radius:3px;overflow:hidden;margin-top:6px;
-}
-.reliability-fill{height:100%;border-radius:3px;transition:width .8s cubic-bezier(.4,0,.2,1);}
+/* PRED BLOCK - FIXED DESIGN */
+.pred-block{background:var(--panel);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:16px;}
+.pred-head{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-bottom:1px solid var(--border);background:rgba(204,68,255,0.05);}
+.pred-title{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:2px;color:var(--purple);}
+.pred-body{display:flex;flex-wrap:wrap;gap:0;}
+.pred-col{padding:20px;flex:1;min-width:280px;border-right:1px solid var(--border);}
+.pred-col:last-child{border-right:none;}
 
-/* PRED BLOCK */
-.pred-block{background:var(--panel);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:16px;position:relative;}
-.pred-block::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--purple),var(--accent),var(--purple),transparent);background-size:200% 100%;animation:shimmer 3s linear infinite;}
-@keyframes shimmer{0%{background-position:-200% 0;}100%{background-position:200% 0;}}
-.pred-head{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--border);background:rgba(204,68,255,0.04);}
-.pred-title{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:4px;color:var(--purple);text-transform:uppercase;}
-.pred-badge{font-size:9px;letter-spacing:2px;color:var(--dim);background:rgba(204,68,255,0.08);border:1px solid rgba(204,68,255,0.2);padding:3px 8px;border-radius:3px;}
-.pred-body{display:grid;grid-template-columns:1fr 2px 1fr 2px 1fr;gap:0;}
-.pred-sep{background:linear-gradient(180deg,transparent,var(--border),transparent);margin:16px 0;}
-.pred-main{padding:24px 28px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;}
-.pred-main::after{content:'';position:absolute;inset:20px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(204,68,255,0.06) 0%,transparent 70%);pointer-events:none;animation:breathe 4s ease-in-out infinite;}
-@keyframes breathe{0%,100%{opacity:.5;transform:scale(.95);}50%{opacity:1;transform:scale(1.05);}}
-.pred-label-sm{font-size:9px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:10px;position:relative;z-index:1;}
-.pred-multiplier{font-family:'Orbitron',sans-serif;font-size:clamp(48px,9vw,88px);font-weight:900;line-height:1;position:relative;z-index:1;transition:all .5s cubic-bezier(.4,0,.2,1);letter-spacing:2px;}
-.pred-multiplier.zone-low{color:var(--danger);text-shadow:0 0 30px var(--glow-d),0 0 60px rgba(255,45,45,0.2);}
-.pred-multiplier.zone-mid{color:var(--warn);text-shadow:0 0 30px rgba(255,179,0,0.4),0 0 60px rgba(255,179,0,0.15);}
-.pred-multiplier.zone-hi{color:var(--green);text-shadow:0 0 30px var(--glow-g),0 0 60px rgba(0,255,127,0.2);}
-.pred-multiplier.zone-moon{color:var(--purple);text-shadow:0 0 30px rgba(204,68,255,0.5),0 0 80px rgba(204,68,255,0.3);}
-.pred-multiplier.zone-wait{color:var(--dim);text-shadow:none;}
-.pred-sub{font-size:12px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-top:8px;position:relative;z-index:1;}
+.pred-multiplier{font-family:'Orbitron',sans-serif;font-size:64px;font-weight:900;line-height:1;margin:10px 0;}
+.zone-low{color:var(--danger);text-shadow:0 0 20px var(--glow-d);}
+.zone-mid{color:var(--warn);text-shadow:0 0 20px rgba(255,179,0,0.3);}
+.zone-hi{color:var(--green);text-shadow:0 0 20px var(--glow-g);}
+.zone-moon{color:var(--purple);text-shadow:0 0 20px rgba(204,68,255,0.4);}
+.zone-wait{color:var(--dim);}
 
-/* Colonne conf */
-.pred-conf{padding:20px 18px;display:flex;flex-direction:column;gap:11px;}
-.pred-conf-title{font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;}
-.conf-bar-row{display:flex;flex-direction:column;gap:4px;}
-.conf-bar-label{display:flex;justify-content:space-between;font-size:12px;}
-.conf-bar-lbl{color:var(--dim);font-size:11px;letter-spacing:1px;}
-.conf-bar-pct{font-family:'Share Tech Mono',monospace;font-size:10px;}
-.conf-bar-wrap{height:10px;background:rgba(255,255,255,0.03);border-radius:2px;overflow:hidden;position:relative;}
-.conf-bar{height:100%;border-radius:2px;transition:width .8s cubic-bezier(.4,0,.2,1);}
-.conf-ci-line{position:absolute;top:0;height:100%;background:rgba(255,255,255,0.05);border-left:1px dashed rgba(255,255,255,0.4);border-right:1px dashed rgba(255,255,255,0.4);pointer-events:none;}
+.conf-bar-wrap{height:8px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden;margin:4px 0 10px;position:relative;}
+.conf-bar{height:100%;transition:width 0.5s;}
+.conf-ci-line{position:absolute;top:0;height:100%;background:rgba(255,255,255,0.1);border-left:1px dashed #fff;border-right:1px dashed #fff;pointer-events:none;}
 
-/* PRED SIGNAL */
-.pred-signal{margin-top:4px;padding:8px 12px;border-radius:4px;font-size:12px;font-weight:700;letter-spacing:1px;text-align:center;transition:all .4s;}
-.sig-wait{background:rgba(58,106,138,0.15);color:var(--dim);border:1px solid var(--border);}
-.sig-danger{background:rgba(255,45,45,0.12);color:var(--danger);border:1px solid rgba(255,45,45,0.3);}
-.sig-warn{background:rgba(255,179,0,0.1);color:var(--warn);border:1px solid rgba(255,179,0,0.25);}
-.sig-ok{background:rgba(0,255,127,0.1);color:var(--green);border:1px solid rgba(0,255,127,0.25);}
-.sig-moon{background:rgba(204,68,255,0.1);color:var(--purple);border:1px solid rgba(204,68,255,0.3);}
-
-/* Kelly col */
-.pred-kelly{padding:24px 20px;display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center;text-align:center;}
-.kelly-title{font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;}
-.kelly-amount{font-family:'Orbitron',sans-serif;font-size:clamp(22px,3.5vw,34px);font-weight:700;transition:all .5s;}
-.kelly-target{font-size:12px;color:var(--dim);letter-spacing:1px;}
-.kelly-edge{font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--dim);}
-.kelly-note{font-size:10px;color:var(--dim);line-height:1.5;max-width:160px;}
-
-/* COLS */
-.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+/* INPUTS */
+.cols{display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:16px;margin-bottom:16px;}
 .card{background:var(--panel);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
-.card-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border);background:rgba(0,200,255,0.03);}
-.card-title{font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:3px;color:var(--accent);text-transform:uppercase;}
+.card-head{padding:12px 16px;border-bottom:1px solid var(--border);background:rgba(0,200,255,0.03);color:var(--accent);font-family:'Orbitron';font-size:10px;letter-spacing:2px;}
 .card-body{padding:16px;}
 
-/* MISE */
 .mise-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
-.mise-btn{background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:9px 4px;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:13px;cursor:pointer;transition:all .2s;text-align:center;letter-spacing:1px;}
-.mise-btn:hover,.mise-btn.active{background:var(--accent);color:var(--bg);border-color:var(--accent);box-shadow:0 0 12px var(--glow-a);font-weight:700;}
-.mise-custom-row{display:flex;gap:8px;align-items:center;margin-bottom:12px;}
-.mise-custom-row label{font-size:10px;letter-spacing:2px;color:var(--dim);white-space:nowrap;text-transform:uppercase;}
-.mise-custom-row input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:8px 12px;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:15px;transition:border-color .2s,box-shadow .2s;}
-.mise-custom-row input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 8px var(--glow-a);}
-.multi-row{display:flex;gap:10px;align-items:flex-end;margin-bottom:12px;}
-.field{display:flex;flex-direction:column;gap:5px;flex:1;}
-.field label{font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;}
-.field input{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:10px 14px;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:17px;transition:border-color .2s,box-shadow .2s;width:100%;-moz-appearance:textfield;}
-.field input::-webkit-outer-spin-button,.field input::-webkit-inner-spin-button{-webkit-appearance:none;}
-.field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 8px var(--glow-a);}
-.result-btns{display:flex;gap:8px;margin-bottom:14px;}
-.rbtn{flex:1;padding:9px;border:1px solid var(--border);border-radius:4px;background:var(--panel2);color:var(--dim);font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;letter-spacing:1px;}
-.rbtn:hover{border-color:var(--accent);color:var(--accent);}
-.rbtn.sel-win{background:rgba(0,255,127,0.1);border-color:var(--green);color:var(--green);}
-.rbtn.sel-loss{background:rgba(255,45,45,0.1);border-color:var(--danger);color:var(--danger);}
-.rbtn.sel-skip{background:rgba(255,179,0,0.1);border-color:var(--warn);color:var(--warn);}
-.btn-add{width:100%;background:var(--accent);color:var(--bg);border:none;border-radius:4px;padding:13px;font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;letter-spacing:3px;cursor:pointer;transition:all .25s;}
-.btn-add:hover{background:#fff;box-shadow:0 0 25px var(--glow-a);transform:translateY(-1px);}
-.btn-add:active{transform:translateY(0);}
+.mise-btn{background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:8px;color:var(--text);cursor:pointer;text-align:center;font-family:'Share Tech Mono';}
+.mise-btn.active{background:var(--accent);color:#000;font-weight:bold;}
 
-/* CONSEIL */
-.conseil{padding:14px 16px;font-size:14px;line-height:1.7;border-left:3px solid var(--warn);}
-.conseil.ok{border-left-color:var(--green);}.conseil.bad{border-left-color:var(--danger);}
-.conseil strong{display:block;margin-bottom:4px;font-size:15px;}
-.conseil.ok strong{color:var(--green);}.conseil.bad strong{color:var(--danger);}.conseil.neutral strong{color:var(--warn);}
+input[type="number"]{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:10px;color:var(--text);font-family:'Share Tech Mono';font-size:16px;margin-bottom:10px;}
+.result-btns{display:flex;gap:8px;margin-bottom:12px;}
+.rbtn{flex:1;padding:10px;border:1px solid var(--border);border-radius:4px;background:var(--panel2);color:var(--dim);cursor:pointer;font-weight:bold;}
+.rbtn.sel-win{border-color:var(--green);color:var(--green);background:rgba(0,255,127,0.05);}
+.rbtn.sel-loss{border-color:var(--danger);color:var(--danger);background:rgba(255,45,45,0.05);}
+.rbtn.sel-skip{border-color:var(--warn);color:var(--warn);background:rgba(255,179,0,0.05);}
 
-/* PROBA */
-.proba-section{margin-bottom:14px;}
-.proba-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(14,48,80,0.5);font-size:13px;}
-.proba-row:last-child{border-bottom:none;}
-.proba-label{width:120px;color:var(--dim);flex-shrink:0;font-size:12px;}
-.proba-bar-wrap{flex:1;height:14px;background:rgba(255,255,255,0.03);border-radius:2px;overflow:hidden;}
-.proba-bar{height:100%;border-radius:2px;transition:width .7s cubic-bezier(.4,0,.2,1);}
-.proba-pct{width:42px;text-align:right;font-family:'Share Tech Mono',monospace;font-size:11px;}
-.proba-ci{width:70px;text-align:right;font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);}
-.proba-signal{width:64px;text-align:center;font-size:10px;font-weight:700;letter-spacing:1px;padding:2px 4px;border-radius:3px;}
-.sig-hot{background:rgba(0,255,127,0.15);color:var(--green);}
-.sig-cold{background:rgba(255,45,45,0.15);color:var(--danger);}
-.sig-neu{background:rgba(255,179,0,0.1);color:var(--warn);}
+.btn-add{width:100%;background:var(--accent);color:#000;border:none;border-radius:4px;padding:14px;font-family:'Orbitron';font-weight:bold;cursor:pointer;letter-spacing:2px;}
 
-/* STREAK */
-.streak-box{display:flex;gap:6px;flex-wrap:wrap;padding:14px 16px;}
-.streak-dot{width:28px;height:28px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;font-family:'Share Tech Mono',monospace;}
-.sd-low{background:rgba(255,45,45,0.2);color:var(--danger);border:1px solid rgba(255,45,45,0.4);}
-.sd-mid{background:rgba(255,179,0,0.15);color:var(--warn);border:1px solid rgba(255,179,0,0.3);}
-.sd-high{background:rgba(0,200,255,0.12);color:var(--accent);border:1px solid rgba(0,200,255,0.3);}
-.sd-moon{background:rgba(204,68,255,0.15);color:var(--purple);border:1px solid rgba(204,68,255,0.4);}
+/* UTILS */
+.history-list{max-height:300px;overflow-y:auto;}
+.hitem{display:grid;grid-template-columns:40px 1fr 1fr 1fr 40px;padding:10px;border-bottom:1px solid rgba(255,255,255,0.05);align-items:center;}
+.conseil{padding:15px;border-left:4px solid var(--warn);line-height:1.6;font-size:14px;}
+.streak-box{display:flex;gap:5px;flex-wrap:wrap;padding:10px;}
+.streak-dot{width:30px;height:30px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;font-family:'Share Tech Mono';background:var(--panel2);border:1px solid var(--border);}
 
-/* HISTORY */
-.history-wrap{margin-bottom:14px;}
-.history-list{max-height:260px;overflow-y:auto;}
-.history-list::-webkit-scrollbar{width:3px;}
-.history-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
-.hitem{display:grid;grid-template-columns:34px 90px 100px 90px 80px auto;align-items:center;padding:9px 16px;border-bottom:1px solid rgba(14,48,80,0.4);font-size:13px;animation:slideIn .25s ease;transition:background .2s;}
-.hitem:hover{background:rgba(0,200,255,0.03);}
-@keyframes slideIn{from{opacity:0;transform:translateX(-8px);}to{opacity:1;transform:translateX(0);}}
-.h-n{color:var(--dim);font-size:11px;}.h-m{font-family:'Orbitron',sans-serif;font-weight:700;font-size:15px;}
-.h-m.low{color:var(--danger);}.h-m.mid{color:var(--warn);}.h-m.hi{color:var(--green);}
-.h-m.moon{color:var(--purple);text-shadow:0 0 8px rgba(204,68,255,.5);}
-.h-mise{color:var(--dim);font-family:'Share Tech Mono',monospace;}
-.h-r.win{color:var(--green);}.h-r.loss{color:var(--danger);}.h-r.skip{color:var(--warn);}
-.h-pnl{font-family:'Orbitron',sans-serif;font-size:12px;].h-pnl.pos{color:var(--green);].h-pnl.neg{color:var(--danger);}
-.btn-del{background:none;border:none;color:var(--dim);cursor:pointer;font-size:13px;padding:2px 6px;transition:color .2s;}
-.btn-del:hover{color:var(--danger);}
-.empty{text-align:center;padding:30px;color:var(--dim);font-size:12px;letter-spacing:2px;}
-
-/* DIST */
-.full-card{margin-bottom:14px;}
-.dist-rows{display:flex;flex-direction:column;gap:9px;padding:14px 16px;}
-.drow{display:grid;grid-template-columns:100px 1fr 52px 80px 80px;align-items:center;gap:8px;font-size:12px;}
-.dl{color:var(--dim);text-align:right;}
-.dbar-w{height:16px;background:rgba(255,255,255,0.03);border-radius:2px;overflow:hidden;}
-.dbar{height:100%;border-radius:2px;transition:width .6s cubic-bezier(.4,0,.2,1);}
-.dpct{font-family:'Share Tech Mono',monospace;font-size:11px;text-align:right;}
-.dtheory{color:var(--dim);font-size:11px;font-family:'Share Tech Mono',monospace;}
-.dchi{font-size:10px;font-family:'Share Tech Mono',monospace;text-align:center;}
-
-/* MATRIX */
-.matrix-section{padding:16px;}
-.matrix-title{font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:12px;}
-.matrix-grid{display:grid;grid-template-columns:70px repeat(4,1fr);gap:3px;}
-.mh{text-align:center;font-size:9px;letter-spacing:1px;color:var(--dim);padding:4px 2px;text-transform:uppercase;}
-.mrow-lbl{display:flex;align-items:center;font-size:9px;letter-spacing:1px;color:var(--dim);text-transform:uppercase;}
-.mcell{background:rgba(255,255,255,0.02);border:1px solid rgba(14,48,80,0.5);border-radius:3px;padding:6px 4px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:11px;transition:background .4s,border-color .4s;}
-.mcell.high{background:rgba(0,255,127,0.12);border-color:rgba(0,255,127,0.3);color:var(--green);}
-.mcell.med{background:rgba(255,179,0,0.08);border-color:rgba(255,179,0,0.2);color:var(--warn);}
-.mcell.low{background:rgba(14,48,80,0.3);color:var(--dim);}
-
-/* CHI² ALERTE */
-.chi-alert{padding:10px 16px;margin:0;font-size:12px;line-height:1.6;border-left:3px solid var(--dim);background:rgba(255,255,255,0.01);}
-.chi-alert.ok{border-left-color:var(--green);}
-.chi-alert.warn{border-left-color:var(--warn);}
-.chi-alert.danger{border-left-color:var(--danger);}
-
-.btn-sm{background:transparent;border:1px solid var(--danger);color:var(--danger);border-radius:3px;padding:4px 10px;font-family:'Share Tech Mono',monospace;font-size:10px;cursor:pointer;letter-spacing:1px;transition:all .2s;}
-.btn-sm:hover{background:var(--danger);color:var(--bg);}
-
-footer{text-align:center;padding:16px 0;color:var(--dim);font-size:10px;letter-spacing:2px;border-top:1px solid var(--border);margin-top:4px;}
-
-@media(max-width:700px){
-  .stats-grid{grid-template-columns:repeat(3,1fr);}
-  .cols{grid-template-columns:1fr;}
-  .pred-body{grid-template-columns:1fr;}
-  .pred-sep{display:none;}
-  .hitem{grid-template-columns:28px 70px 80px auto;}
-  .h-mise,.h-r{display:none;}
-  .drow{grid-template-columns:80px 1fr 42px 70px;}
-  .dchi{display:none;}
-}
-
-@keyframes flash{0%{background:rgba(0,200,255,0.12);}100%{background:transparent;}}
-.flash{animation:flash .8s ease;}
-@keyframes predflash{0%{opacity:.5;}50%{opacity:1;}100%{opacity:.5;}}
-.pred-updating{animation:predflash .5s ease;}
+.proba-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:12px;}
+.proba-bar-bg{flex:1;height:12px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden;}
+.proba-bar-fill{height:100%;transition:width 0.4s;}
 </style>
 </head>
 <body>
 <div class="wrap">
 
 <header>
-  <div class="logo">AVIA<em>TOR</em> TRACKER <span class="badge-v3">v3.2 Chaos</span></div>
-  <div class="tagline">Analyse des Cycles de Variance · Tracking du Momentum RNG</div>
-  <div class="logo-line"></div>
+  <div class="logo">AVIA<em>TOR</em> TRACKER <span class="badge-v3">v3.3 Stable</span></div>
+  <div class="tagline">Analyse des Cycles RNG & Dispersion de Variance</div>
 </header>
 
 <div class="stats-grid">
   <div class="sc"><div class="sc-label">Tours</div><div class="sc-val" id="s-total">0</div></div>
-  <div class="sc"><div class="sc-label">P&amp;L (FCFA)</div><div class="sc-val" id="s-pnl">0</div></div>
-  <div class="sc"><div class="sc-label">Capital Virtuel</div><div class="sc-val" id="s-bankroll">—</div></div>
-  <div class="sc"><div class="sc-label">Win Rate</div><div class="sc-val" id="s-wr">—</div></div>
-  <div class="sc"><div class="sc-label">Mult. Moyen</div><div class="sc-val" id="s-avg">—</div></div>
-  <div class="sc">
-    <div class="sc-label">Régularité Cycles</div>
-    <div class="sc-val pur" id="s-reliability">—</div>
-    <div class="reliability-bar"><div class="reliability-fill" id="s-rel-bar" style="width:0%;background:var(--purple)"></div></div>
-  </div>
+  <div class="sc"><div class="sc-label">P&L (FCFA)</div><div class="sc-val" id="s-pnl">0</div></div>
+  <div class="sc"><div class="sc-label">Capital</div><div class="sc-val" id="s-bankroll">50 000</div></div>
+  <div class="sc"><div class="sc-label">Win Rate</div><div class="sc-val" id="s-wr">0%</div></div>
+  <div class="sc"><div class="sc-label">Régularité</div><div class="sc-val" id="s-reliability">0%</div></div>
 </div>
 
-<!-- BLOC PREDICTION -->
+<!-- PREDICTION BLOCK -->
 <div class="pred-block">
   <div class="pred-head">
-    <div class="pred-title">🔮 Fluctuation du Cycle RNG — Analyse Réactive</div>
-    <div class="pred-badge" id="pred-model-badge">EN ATTENTE</div>
+    <div class="pred-title">🎯 FOCUS RNG : ANALYSE DES CYCLES RÉCENTS</div>
+    <div id="pred-model-badge" style="font-size:10px; color:var(--dim)">MODE : ATTENTE</div>
   </div>
   <div class="pred-body">
-
-    <div class="pred-main">
-      <div class="pred-label-sm">Cible de Sortie Estimée</div>
-      <div class="pred-multiplier zone-wait" id="pred-mult">?</div>
-      <div class="pred-sub" id="pred-zone-label">Enregistre 3 tours</div>
-      <div class="pred-signal sig-wait" id="pred-signal" style="margin-top:14px;min-width:180px;">— Données insuffisantes —</div>
+    <div class="pred-col" style="text-align:center">
+      <div class="sc-label">Cible de Cashout Suggérée</div>
+      <div id="pred-mult" class="pred-multiplier zone-wait">?</div>
+      <div id="pred-signal" class="pred-signal sig-wait">Calibrage (0/3)</div>
     </div>
-
-    <div class="pred-sep"></div>
-
-    <div class="pred-conf">
-      <div class="pred-conf-title">Dispersion Réactive — Fenêtre Glissante (N=12)</div>
-      <div class="conf-bar-row">
-        <div class="conf-bar-label">
-          <span class="conf-bar-lbl">Crash Brutal &lt; 1.5x</span>
-          <span class="conf-bar-pct" id="mk-p0" style="color:var(--danger)">—</span>
-        </div>
-        <div class="conf-bar-wrap">
-          <div class="conf-bar" id="mk-b0" style="width:0%;background:var(--danger)"></div>
-          <div class="conf-ci-line" id="mk-ci0" style="left:0;width:0%"></div>
-        </div>
-      </div>
-      <div class="conf-bar-row">
-        <div class="conf-bar-label">
-          <span class="conf-bar-lbl">Zone Basse 1.5x–3x</span>
-          <span class="conf-bar-pct" id="mk-p1" style="color:var(--warn)">—</span>
-        </div>
-        <div class="conf-bar-wrap">
-          <div class="conf-bar" id="mk-b1" style="width:0%;background:var(--warn)"></div>
-          <div class="conf-ci-line" id="mk-ci1" style="left:0;width:0%"></div>
-        </div>
-      </div>
-      <div class="conf-bar-row">
-        <div class="conf-bar-label">
-          <span class="conf-bar-lbl">Zone Moyenne 3x–6x</span>
-          <span class="conf-bar-pct" id="mk-p2" style="color:var(--green)">—</span>
-        </div>
-        <div class="conf-bar-wrap">
-          <div class="conf-bar" id="mk-b2" style="width:0%;background:var(--green)"></div>
-          <div class="conf-ci-line" id="mk-ci2" style="left:0;width:0%"></div>
-        </div>
-      </div>
-      <div class="conf-bar-row">
-        <div class="conf-bar-label">
-          <span class="conf-bar-lbl">Zone Haute ≥ 6x 🚀</span>
-          <span class="conf-bar-pct" id="mk-p3" style="color:var(--purple)">—</span>
-        </div>
-        <div class="conf-bar-wrap">
-          <div class="conf-bar" id="mk-b3" style="width:0%;background:var(--purple)"></div>
-          <div class="conf-ci-line" id="mk-ci3" style="left:0;width:0%"></div>
-        </div>
-      </div>
-
-      <div style="margin-top:8px;padding-top:10px;border-top:1px solid var(--border);">
-        <div class="pred-conf-title" style="margin-bottom:6px;">État du Flux RNG</div>
-        <div id="session-context" style="font-size:11px;color:var(--dim);line-height:1.8;">—</div>
+    <div class="pred-col">
+      <div class="sc-label">Dispersion Réactive (Fenêtre N=10)</div>
+      <div id="markov-bars">
+        <!-- Généré par JS -->
       </div>
     </div>
-
-    <div class="pred-sep"></div>
-
-    <div class="pred-kelly">
-      <div class="kelly-title">Allocation Recommandée (Chaos Mode)</div>
-      <div class="kelly-amount" id="kelly-amount" style="color:var(--dim);">—</div>
-      <div class="kelly-target" id="kelly-target">—</div>
-      <div class="kelly-edge" id="kelly-edge">—</div>
-      <div class="kelly-note" id="kelly-note" style="margin-top:6px;font-size:10px;color:var(--dim);line-height:1.5;">Prise de décision adaptative.</div>
-      <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);width:100%;text-align:center;">
-        <div class="kelly-title" style="margin-bottom:4px;">Capital de référence</div>
-        <div style="display:flex;gap:6px;align-items:center;justify-content:center;">
-          <input type="number" id="inp-bankroll" value="50000"
-            style="background:var(--bg);border:1px solid var(--border);border-radius:3px;color:var(--text);
-            font-family:'Share Tech Mono';font-size:13px;width:90px;padding:4px 8px;text-align:center;"
-            onchange="updateCapital()">
-          <span style="font-size:10px;color:var(--dim);">FCFA</span>
-        </div>
-      </div>
+    <div class="pred-col">
+      <div class="sc-label">Mise Conseillée</div>
+      <div id="kelly-amount" class="pred-multiplier" style="font-size:32px; color:var(--green)">—</div>
+      <div id="kelly-note" style="font-size:11px; color:var(--dim)">Veuillez enregistrer des scores.</div>
     </div>
   </div>
 </div>
 
-<!-- INPUT + CONSEIL -->
 <div class="cols">
+  <!-- INPUT CARD -->
   <div class="card">
-    <div class="card-head"><div class="card-title">▶ Nouveau tour</div></div>
+    <div class="card-head">SAISIE DES DONNÉES</div>
     <div class="card-body">
-      <div style="font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:8px;">Mise rapide (FCFA)</div>
+      <div class="sc-label" style="margin-bottom:8px">Mise Rapide</div>
       <div class="mise-grid">
         <div class="mise-btn" onclick="selectMise(100)">100</div>
-        <div class="mise-btn" onclick="selectMise(200)">200</div>
         <div class="mise-btn" onclick="selectMise(500)">500</div>
-        <div class="mise-btn" onclick="selectMise(1000)">1 000</div>
-        <div class="mise-btn" onclick="selectMise(2000)">2 000</div>
-        <div class="mise-btn" onclick="selectMise(5000)">5 000</div>
-        <div class="mise-btn" onclick="selectMise(10000)" style="grid-column:span 3;">10 000 MAX</div>
+        <div class="mise-btn" onclick="selectMise(1000)">1K</div>
+        <div class="mise-btn" onclick="selectMise(2000)">2K</div>
+        <div class="mise-btn" onclick="selectMise(5000)">5K</div>
+        <div class="mise-btn" onclick="selectMise(10000)">10K</div>
       </div>
-      <div class="mise-custom-row">
-        <label>Ou montant libre :</label>
-        <input type="number" id="inp-mise" placeholder="ex: 750" min="100" max="100000" step="100">
-      </div>
-      <div class="multi-row">
-        <div class="field">
-          <label>Multiplicateur final constaté (Crash)</label>
-          <input type="number" id="inp-multi" placeholder="ex: 2.45" step="0.01" min="1">
-        </div>
-      </div>
-      <div style="font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:7px;">Résultat personnel</div>
+      <input type="number" id="inp-mise" placeholder="Mise (F)">
+      <div class="sc-label" style="margin-bottom:8px">Score Crash Constaté</div>
+      <input type="number" id="inp-multi" placeholder="Ex: 2.45" step="0.01">
       <div class="result-btns">
-        <button class="rbtn" id="rb-win" onclick="setResult('win')">✅ GAGNÉ</button>
-        <button class="rbtn" id="rb-loss" onclick="setResult('loss')">❌ PERDU</button>
-        <button class="rbtn" id="rb-skip" onclick="setResult('skip')">⏭ PASSÉ</button>
+        <button class="rbtn" id="rb-win" onclick="setResult('win')">GAGNÉ</button>
+        <button class="rbtn" id="rb-loss" onclick="setResult('loss')">PERDU</button>
+        <button class="rbtn" id="rb-skip" onclick="setResult('skip')">PASSÉ</button>
       </div>
-      <button class="btn-add" onclick="addRound()">+ ENREGISTRER (ENTRÉE)</button>
+      <button class="btn-add" onclick="addRound()">ENREGISTRER</button>
     </div>
   </div>
 
+  <!-- CONSEIL CARD -->
   <div class="card">
-    <div class="card-head"><div class="card-title">🧠 Analyse active des Paliers RNG</div></div>
-    <div id="conseil-box" class="conseil neutral">
-      <strong>En attente de données…</strong>
-      Entre au moins 5 tours pour obtenir une analyse de session.
+    <div class="card-head">ANALYSE DU MOMENTUM</div>
+    <div id="conseil-box" class="conseil">
+      En attente de données pour définir la phase du RNG (Aspiration ou Dispersion).
     </div>
-    <div style="padding:0 16px 8px;border-top:1px solid var(--border);margin-top:0;">
-      <div style="font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;padding:10px 0 8px;">Fluctuations observées vs théorie (IC 95%)</div>
-      <div class="proba-section">
-        <div class="proba-row">
-          <div class="proba-label">Atteindre 1.5x</div>
-          <div class="proba-bar-wrap"><div class="proba-bar" id="pb-15" style="width:0%;background:var(--warn)"></div></div>
-          <div class="proba-pct" id="pp-15">—</div>
-          <div class="proba-ci" id="pc-15">—</div>
-          <div class="proba-signal" id="ps-15">—</div>
-        </div>
-        <div class="proba-row">
-          <div class="proba-label">Atteindre 2x</div>
-          <div class="proba-bar-wrap"><div class="proba-bar" id="pb-2" style="width:0%;background:var(--accent)"></div></div>
-          <div class="proba-pct" id="pp-2">—</div>
-          <div class="proba-ci" id="pc-2">—</div>
-          <div class="proba-signal" id="ps-2">—</div>
-        </div>
-        <div class="proba-row">
-          <div class="proba-label">Atteindre 3x</div>
-          <div class="proba-bar-wrap"><div class="proba-bar" id="pb-3" style="width:0%;background:var(--green)"></div></div>
-          <div class="proba-pct" id="pp-3">—</div>
-          <div class="proba-ci" id="pc-3">—</div>
-          <div class="proba-signal" id="ps-3">—</div>
-        </div>
-        <div class="proba-row">
-          <div class="proba-label">Atteindre 5x</div>
-          <div class="proba-bar-wrap"><div class="proba-bar" id="pb-5" style="width:0%;background:var(--purple)"></div></div>
-          <div class="proba-pct" id="pp-5">—</div>
-          <div class="proba-ci" id="pc-5">—</div>
-          <div class="proba-signal" id="ps-5">—</div>
-        </div>
-      </div>
+    <div class="card-body" style="border-top:1px solid var(--border)">
+        <div class="sc-label">Probabilités Temps Réel</div>
+        <div id="proba-live-container"></div>
     </div>
   </div>
 </div>
 
-<!-- STREAK + MATRICE -->
-<div class="cols">
-  <div class="card">
-    <div class="card-head"><div class="card-title">⚡ Derniers 20 Tours</div></div>
-    <div class="streak-box" id="streak-box">
-      <div style="color:var(--dim);font-size:12px;letter-spacing:1px;">Aucun tour encore</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-head"><div class="card-title">🔢 Transitions de Cycle Court (Dirichlet-Bayesian)</div></div>
-    <div class="matrix-section">
-      <div class="matrix-title">De ↓ Vers → · États : Crash / Bas / Moyen / Haut</div>
-      <div class="matrix-grid" id="markov-matrix"></div>
-      <div style="margin-top:10px;font-size:10px;color:var(--dim);line-height:1.6;" id="markov-info">
-        Matrice focalisée sur les transitions ultra-récentes pour capturer les micro-patterns.
-      </div>
-    </div>
-  </div>
+<div class="card" style="margin-bottom:16px;">
+    <div class="card-head">DERNIÈRES SÉQUENCES</div>
+    <div id="streak-box" class="streak-box"></div>
 </div>
 
-<!-- HISTORY -->
-<div class="card full-card history-wrap">
-  <div class="card-head">
-    <div class="card-title">📋 Historique Complet</div>
-    <button class="btn-sm" onclick="clearAll()">⚠ RESET</button>
+<div class="card">
+  <div class="card-head" style="display:flex; justify-content:space-between">
+    <span>HISTORIQUE</span>
+    <button onclick="clearAll()" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:10px;">RESET ALL</button>
   </div>
-  <div class="history-list" id="history-list">
-    <div class="empty">[ AUCUN TOUR ENREGISTRÉ ]</div>
-  </div>
+  <div id="history-list" class="history-list"></div>
 </div>
 
-<!-- DISTRIBUTION + CHI² -->
-<div class="card full-card">
-  <div class="card-head"><div class="card-title">📊 Déviation du Flux — Écarts Temporaires vs Théorie</div></div>
-  <div id="chi-alert-box" class="chi-alert ok" style="display:none;"></div>
-  <div class="dist-rows">
-    <div class="drow" style="font-size:9px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;">
-      <div></div><div>Barre</div><div style="text-align:right">Obs.</div><div>Théorie</div><div style="text-align:center">Contribution χ²</div>
-    </div>
-    <div class="drow"><div class="dl">Crash &lt; 1.5x</div><div class="dbar-w"><div class="dbar" id="db1" style="width:0%;background:var(--danger)"></div></div><div class="dpct" id="dp1">0%</div><div class="dtheory">35.3%</div><div class="dchi" id="dc1">—</div></div>
-    <div class="drow"><div class="dl">1.5x — 2x</div><div class="dbar-w"><div class="dbar" id="db2" style="width:0%;background:var(--warn)"></div></div><div class="dpct" id="dp2">0%</div><div class="dtheory">16.2%</div><div class="dchi" id="dc2">—</div></div>
-    <div class="drow"><div class="dl">2x — 3x</div><div class="dbar-w"><div class="dbar" id="db3" style="width:0%;background:var(--accent)"></div></div><div class="dpct" id="dp3">0%</div><div class="dtheory">16.2%</div><div class="dchi" id="dc3">—</div></div>
-    <div class="drow"><div class="dl">3x — 5x</div><div class="dbar-w"><div class="dbar" id="db4" style="width:0%;background:var(--green)"></div></div><div class="dpct" id="dp4">0%</div><div class="dtheory">12.9%</div><div class="dchi" id="dc4">—</div></div>
-    <div class="drow"><div class="dl">5x — 10x</div><div class="dbar-w"><div class="dbar" id="db5" style="width:0%;background:#00ccaa"></div></div><div class="dpct" id="dp5">0%</div><div class="dtheory">9.7%</div><div class="dchi" id="dc5">—</div></div>
-    <div class="drow"><div class="dl">+10x 🚀</div><div class="dbar-w"><div class="dbar" id="db6" style="width:0%;background:var(--purple)"></div></div><div class="dpct" id="dp6">0%</div><div class="dtheory">9.7%</div><div class="dchi" id="dc6">—</div></div>
-  </div>
-</div>
-
-<footer>AVIATOR TRACKER v3.2 Chaos · Analyse adaptative de variance à court terme · Jouer responsable</footer>
 </div>
 
 <script>
-// ══ ÉTAT ══════════════════════════════════════════════════════════════════════
-let rounds = JSON.parse(localStorage.getItem('av3_rounds') || '[]');
-let selectedMise = 0, selectedResult = '';
-let initialCapital = parseFloat(localStorage.getItem('av3_capital') || '50000');
+// --- CONFIG & STATE ---
+let rounds = JSON.parse(localStorage.getItem('av3_db') || '[]');
+let selectedMise = 0;
+let selectedResult = '';
+let bankrollInitial = 50000;
 
-const THEO_DIST   = [0.3533, 0.3234, 0.1616, 0.1617]; 
-const THEO_DIST6  = [0.3533, 0.1617, 0.1617, 0.1293, 0.0970, 0.0970]; 
-const THEORY = { 1.5:0.97/1.5, 2:0.97/2, 3:0.97/3, 5:0.97/5 };
+const THEO = [0.35, 0.33, 0.16, 0.16]; // Zones: <1.5, 1.5-3, 3-6, >6
 
-// ══ MARKOV CYCLES COURTS (RECONNAISSANCE PATTERNS) ═══════════════════════════
-function getState(v) {
-  if (v < 1.50) return 0;
-  if (v < 3.00) return 1;
-  if (v < 6.00) return 2;
-  return 3;
-}
-const STATE_LABELS = ['Crash<1.5x','Bas 1.5–3x','Moy 3–6x','Haut≥6x'];
-const STATE_COLORS = ['var(--danger)','var(--warn)','var(--green)','var(--purple)'];
+// --- CORE FUNCTIONS ---
+function save() { localStorage.setItem('av3_db', JSON.stringify(rounds)); }
 
-// Matrice à mémoire ultra-courte (N=12) et décroissance rapide pour détecter la surchauffe immédiate
-function buildMarkovMatrix(decay = 0.70) {
-  const M = Array.from({length:4}, () => [0,0,0,0]);
-  const activeWindow = rounds.slice(0, 12).reverse(); // Focus strict sur les 12 derniers coups
-  const seq = activeWindow.map(r => getState(r.multi));
-  for (let i = 0; i < seq.length-1; i++) {
-    const w = Math.pow(decay, seq.length-2-i);
-    M[seq[i]][seq[i+1]] += w;
-  }
-  return M;
-}
-
-function normalizeBayes(M, priorW = 2) { // Prior réduit pour laisser l'activité récente dominer
-  return M.map(row => {
-    const sum = row.reduce((a,b)=>a+b, 0);
-    return row.map((v, j) => (v + priorW * THEO_DIST[j]) / (sum + priorW));
-  });
-}
-
-function getNextProbas() {
-  if (rounds.length < 3) return null;
-  const raw = buildMarkovMatrix();
-  const norm = normalizeBayes(raw, 2);
-  const cur = getState(rounds[0].multi);
-  return { probas: norm[cur], currentState: cur, matrix: norm };
-}
-
-// ══ DÉTECTEUR DE MOMENTUM RNG ════════════════════════════════════════════════
-function getRNGPhase() {
-  if (rounds.length < 4) return { phase: 'NEUTRE', text: 'Calibrage...', color: 'var(--dim)', target: 1.50 };
-  
-  const last5 = rounds.slice(0, 5);
-  const lowCrashCount = last5.filter(r => r.multi < 1.50).length;
-  const highFlyCount = last5.filter(r => r.multi >= 3.00).length;
-
-  // Détecter l'alternance High/Low stricte
-  let isAlternating = true;
-  for (let i = 0; i < Math.min(4, rounds.length - 1); i++) {
-    const curHigh = rounds[i].multi >= 2.0;
-    const prevHigh = rounds[i+1].multi >= 2.0;
-    if (curHigh === prevHigh) {
-      isAlternating = false;
-      break;
-    }
-  }
-
-  if (lowCrashCount >= 4) {
-    return {
-      phase: 'ASPIRATION SÉVÈRE',
-      text: '🔥 MACHINE FROIDE (Accumulation active)',
-      color: 'var(--danger)',
-      target: 1.15 // Cashout hyper-sécurisé
-    };
-  }
-  
-  if (highFlyCount >= 3) {
-    return {
-      phase: 'DISPERSION ACTIVE',
-      text: '🚀 MACHINE CHAUDE (Distribution de gains)',
-      color: 'var(--purple)',
-      target: 3.50 // Chercher le palier haut
-    };
-  }
-
-  if (isAlternating && rounds.length >= 4) {
-    const lastHigh = rounds[0].multi >= 2.0;
-    return {
-      phase: 'ALTERNANCE',
-      text: '🔄 STRATÉGIE DE REBOND (Alternance active)',
-      color: 'var(--accent)',
-      target: lastHigh ? 1.35 : 2.20 // Si le dernier était haut, viser bas. Sinon viser haut.
-    };
-  }
-
-  return {
-    phase: 'NEUTRE',
-    text: '✓ CYCLES STANDARDS (Variance stable)',
-    color: 'var(--green)',
-    target: 1.70
-  };
-}
-
-// ══ TESTS STATISTIQUES REFORMATÉS ════════════════════════════════════════════
-
-function computeChi2() {
-  const n = rounds.length;
-  if (n < 10) return { chi2: 0, status: 'Flux stable', color: 'var(--dim)', valStr: 'N/A', contributions: Array(6).fill(0) };
-  const zones = [
-    r=>r.multi<1.5, r=>r.multi>=1.5&&r.multi<2, r=>r.multi>=2&&r.multi<3,
-    r=>r.multi>=3&&r.multi<5, r=>r.multi>=5&&r.multi<10, r=>r.multi>=10
-  ];
-  const contributions = zones.map((fn, i) => {
-    const obs = rounds.filter(fn).length;
-    const exp = n * THEO_DIST6[i];
-    return exp > 0 ? Math.pow(obs - exp, 2) / exp : 0;
-  });
-  const chi2 = contributions.reduce((a,b)=>a+b, 0);
-  let status = 'Flux harmonieux';
-  let color = 'var(--green)';
-  if (chi2 > 15.09) { status = 'Concentration critique de variance'; color = 'var(--danger)'; }
-  else if (chi2 > 11.07) { status = 'Fléchissement de flux (écart temporaire)'; color = 'var(--warn)'; }
-  return { chi2, status, color, valStr: chi2.toFixed(2), contributions };
-}
-
-function computeAutocorr() {
-  const n = rounds.length;
-  if (n < 10) return { r1: 0, significant: false, text: 'Calibrage...', valStr: '—' };
-  const x = rounds.slice(0,15).map(r => r.multi); // Focus ultra-court
-  const mu = x.reduce((a,b)=>a+b,0)/x.length;
-  let num = 0, den = 0;
-  for (let i=0;i<x.length;i++) den += (x[i]-mu)**2;
-  if (den===0) return { r1:0, significant:false, text:'Flux plat', valStr:'0.00' };
-  for (let i=0;i<x.length-1;i++) num += (x[i]-mu)*(x[i+1]-mu);
-  const r1 = num/den;
-  const limit = 1.96/Math.sqrt(x.length);
-  const significant = Math.abs(r1) > limit;
-  const text = significant ? (r1>0 ? 'Suites de crashs' : 'Alternances rapides') : 'Dispersion indépendante';
-  return { r1, significant, text, valStr: r1.toFixed(3) };
-}
-
-function waldCI(p, n) {
-  if (n===0) return { low:0, high:0, margin:0 };
-  const m = 1.96 * Math.sqrt(p*(1-p)/n);
-  return { low: Math.max(0, p-m), high: Math.min(1, p+m), margin: m };
-}
-
-// Mesure la régularité du cycle à court terme (0-100%)
-function reliabilityScore() {
-  const n = rounds.length;
-  if (n === 0) return 0;
-  if (n < 5) return 30;
-  
-  // Analyse des transitions binaires récentes (High/Low)
-  const last5 = rounds.slice(0, 5).map(r => r.multi >= 2.0);
-  let switches = 0;
-  for (let i = 0; i < 4; i++) {
-    if (last5[i] !== last5[i+1]) switches++;
-  }
-  
-  // Strictement stable ou strictement oscillant = Régularité maximale du flux
-  if (switches === 4 || switches === 0) return 95;
-  if (switches === 1 || switches === 3) return 70;
-  return 40;
-}
-
-// Sizing de mise instinctif (Chaos Sizing)
-function getChaosSizing(phase, winRate, bankroll) {
-  const baseMise = Math.round((bankroll * 0.02) / 100) * 100; // 2% par défaut
-  
-  if (phase === 'ASPIRATION SÉVÈRE') {
-    return 100; // Force le retour à la mise minimum (protection)
-  }
-  if (phase === 'DISPERSION ACTIVE' && winRate >= 50) {
-    return Math.min(10000, Math.round((baseMise * 1.5) / 100) * 100); // Augmente l'exposition pour profiter du run
-  }
-  return baseMise;
-}
-
-// ══ SAVE ══════════════════════════════════════════════════════════════════════
-function save() {
-  localStorage.setItem('av3_rounds', JSON.stringify(rounds));
-  localStorage.setItem('av3_capital', initialCapital.toString());
-}
-function updateCapital() {
-  const v = parseFloat(document.getElementById('inp-bankroll').value);
-  if (!isNaN(v) && v>0) { initialCapital=v; save(); render(); }
-}
-
-// ══ INPUTS ════════════════════════════════════════════════════════════════════
 function selectMise(v) {
-  selectedMise=v;
-  document.getElementById('inp-mise').value=v;
-  document.querySelectorAll('.mise-btn').forEach(b => {
-    b.classList.toggle('active', parseInt(b.textContent.replace(/\s/g,''))===v);
-  });
-}
-document.getElementById('inp-mise').addEventListener('input', function() {
-  selectedMise=parseFloat(this.value)||0;
-  document.querySelectorAll('.mise-btn').forEach(b=>b.classList.remove('active'));
-});
-function setResult(r) {
-  selectedResult=r;
-  ['win','loss','skip'].forEach(x => {
-    document.getElementById('rb-'+x).className='rbtn'+(x===r?' sel-'+x:'');
-  });
-}
-function addRound() {
-  const multiRaw=document.getElementById('inp-multi').value;
-  const multi=parseFloat(multiRaw);
-  if (!multiRaw||isNaN(multi)||multi<1) { shake('inp-multi'); return; }
-  if (!selectedMise && selectedResult!=='skip') { shake('inp-mise'); return; }
-  const mise=selectedMise||0;
-  let pnl=0;
-  if (selectedResult==='win')  pnl=mise*(multi-1);
-  if (selectedResult==='loss') pnl=-mise;
-  rounds.unshift({ id:Date.now(), multi, mise, result:selectedResult||'skip', pnl,
-    time:new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}) });
-  save(); render();
-  document.getElementById('inp-multi').value='';
-  document.getElementById('inp-mise').value='';
-  selectedMise=0; selectedResult='';
-  document.querySelectorAll('.mise-btn').forEach(b=>b.classList.remove('active'));
-  ['win','loss','skip'].forEach(x=>{ document.getElementById('rb-'+x).className='rbtn'; });
-  document.getElementById('inp-multi').focus();
-}
-function deleteRound(id) { rounds=rounds.filter(r=>r.id!==id); save(); render(); }
-function clearAll() { if(confirm('Effacer tout l\'historique ?')) { rounds=[]; save(); render(); } }
-
-// ══ RENDER ════════════════════════════════════════════════════════════════════
-function render() {
-  document.getElementById('inp-bankroll').value=initialCapital;
-  renderStats();
-  renderPrediction();
-  renderConseil();
-  renderProba();
-  renderStreak();
-  renderMarkovMatrix();
-  renderHistory();
-  renderDist();
-}
-
-function renderStats() {
-  const n=rounds.length;
-  const pnl=rounds.reduce((s,r)=>s+r.pnl,0);
-  const br=initialCapital+pnl;
-  const played=rounds.filter(r=>r.result==='win'||r.result==='loss');
-  const wins=played.filter(r=>r.result==='win').length;
-  const wr=played.length ? Math.round(wins/played.length*100) : null;
-  const avg=n ? rounds.reduce((s,r)=>s+r.multi,0)/n : 0;
-  const rel=reliabilityScore();
-
-  document.getElementById('s-total').textContent=n;
-  const pnlEl=document.getElementById('s-pnl');
-  pnlEl.textContent=(pnl>=0?'+':'')+Math.round(pnl).toLocaleString('fr-FR');
-  pnlEl.className='sc-val '+(pnl>0?'grn':pnl<0?'red':'');
-  const brEl=document.getElementById('s-bankroll');
-  brEl.textContent=Math.round(br).toLocaleString('fr-FR')+' F';
-  brEl.className='sc-val '+(br>initialCapital?'grn':br<initialCapital?'red':'');
-  const wrEl=document.getElementById('s-wr');
-  wrEl.textContent=wr!==null?wr+'%':'—';
-  wrEl.className='sc-val '+(wr===null?'':(wr>=55?'grn':wr>=40?'org':'red'));
-  document.getElementById('s-avg').textContent=avg?avg.toFixed(2)+'x':'—';
-
-  const relEl=document.getElementById('s-reliability');
-  const barEl=document.getElementById('s-rel-bar');
-  relEl.textContent=n>0?rel+'%':'—';
-  relEl.className='sc-val '+(rel>=60?'grn':rel>=35?'org':'pur');
-  barEl.style.width=rel+'%';
-  barEl.style.background=rel>=60?'var(--green)':rel>=35?'var(--warn)':'var(--purple)';
-
-  let streak=0, sType='';
-  for (let r of rounds) {
-    if (streak===0) { sType=r.result; streak=1; }
-    else if (r.result===sType) streak++;
-    else break;
-  }
-  const sk=document.getElementById('s-streak');
-  if (streak>0) {
-    const icons={win:'✅',loss:'❌',skip:'⏭'};
-    sk.textContent=icons[sType]+'×'+streak;
-    sk.className='sc-val '+(sType==='win'?'grn':sType==='loss'?'red':'org');
-  } else { sk.textContent='—'; sk.className='sc-val'; }
-}
-
-function renderPrediction() {
-  const mk=getNextProbas();
-  const pnl=rounds.reduce((s,r)=>s+r.pnl,0);
-  const br=Math.max(100, initialCapital+pnl);
-  const n=rounds.length;
-
-  const multEl=document.getElementById('pred-mult');
-  const zoneEl=document.getElementById('pred-zone-label');
-  const sigEl=document.getElementById('pred-signal');
-  const badgeEl=document.getElementById('pred-model-badge');
-  const amountEl=document.getElementById('kelly-amount');
-  const targetEl=document.getElementById('kelly-target');
-  const edgeEl=document.getElementById('kelly-edge');
-  const noteEl=document.getElementById('kelly-note');
-
-  if (!mk) {
-    badgeEl.textContent='MODE : ÉCHANTILLONNAGE';
-    multEl.textContent='?'; multEl.className='pred-multiplier zone-wait';
-    zoneEl.textContent='Enregistre 3 tours minimum';
-    sigEl.textContent='— Flux indéterminé —'; sigEl.className='pred-signal sig-wait';
-    amountEl.textContent='—'; amountEl.style.color='var(--dim)';
-    targetEl.textContent='—'; edgeEl.textContent='—';
-    [0,1,2,3].forEach(i=>{ document.getElementById('mk-p'+i).textContent='—'; document.getElementById('mk-b'+i).style.width='0%'; });
-    document.getElementById('session-context').innerHTML='—';
-    return;
-  }
-
-  const { probas } = mk;
-  const rng = getRNGPhase();
-
-  // Barres de dispersion réactive
-  probas.forEach((p, i) => {
-    const pct=Math.round(p*100);
-    const ci=waldCI(p, Math.min(12, n)); // Volatilité sur base 12
-    const low=Math.round(ci.low*100), high=Math.round(ci.high*100);
-    const ciStr=` <span style="font-size:9px;color:var(--dim)">[${low}–${high}%]</span>`;
-    document.getElementById('mk-p'+i).innerHTML=pct+'%'+ciStr;
-    document.getElementById('mk-b'+i).style.width=Math.min(pct,100)+'%';
-    
-    // Positionnement de la barre de fluctuation (Confidence Interval)
-    const ciLine = document.getElementById('mk-ci'+i);
-    if (ciLine) {
-      ciLine.style.left = low + '%';
-      ciLine.style.width = (high - low) + '%';
-    }
-  });
-
-  const targetMulti = rng.target;
-  let zoneText = rng.text;
-  let zoneCls = 'zone-mid';
-  let sigCls = 'pred-signal sig-neu';
-
-  if (rng.phase === 'ASPIRATION SÉVÈRE') {
-    zoneCls = 'zone-low'; sigCls = 'pred-signal sig-danger';
-  } else if (rng.phase === 'DISPERSION ACTIVE') {
-    zoneCls = 'zone-purple'; sigCls = 'pred-signal sig-moon';
-  } else if (rng.phase === 'ALTERNANCE') {
-    zoneCls = 'zone-hi'; sigCls = 'pred-signal sig-ok';
-  }
-
-  multEl.className='pred-multiplier '+zoneCls;
-  multEl.textContent=targetMulti.toFixed(2)+'x';
-  zoneEl.textContent=zoneText;
-  sigEl.className=sigCls; sigEl.textContent=rng.text;
-
-  const rel=reliabilityScore();
-  badgeEl.textContent=`CYCLE : ${rng.phase} · FLUX : ${rel}%`;
-
-  // Allocation adaptative Chaos Sizing
-  const played=rounds.filter(r=>r.result==='win'||r.result==='loss');
-  const wins=played.filter(r=>r.result==='win').length;
-  const wr=played.length ? Math.round(wins/played.length*100) : 0;
-  
-  const suggestedMise = getChaosSizing(rng.phase, wr, br);
-  
-  if (rng.phase === 'ASPIRATION SÉVÈRE') {
-    amountEl.textContent='100 F'; amountEl.style.color='var(--danger)';
-    targetEl.textContent='Machine fermée';
-    edgeEl.textContent='Sécurité maximale active';
-    noteEl.textContent='Le RNG absorbe massivement. Réduisez l\'exposition au plancher.';
-  } else {
-    amountEl.textContent=suggestedMise.toLocaleString('fr-FR')+' F';
-    amountEl.style.color='var(--green)';
-    targetEl.textContent=`Cashout instinctif : ${targetMulti.toFixed(2)}x`;
-    edgeEl.textContent=`Régularité du cycle : ${rel}%`;
-    noteEl.textContent=`Adapté au momentum dynamique de la session.`;
-  }
-
-  // Diagnostics réformés
-  const chi=computeChi2();
-  const ac=computeAutocorr();
-  const ctx=[];
-  ctx.push(`Activité : <span style="color:${chi.color}">${chi.status}</span>`);
-  ctx.push(`Cadence : <span>${ac.text}</span>`);
-  const sessionPnl=rounds.reduce((s,r)=>s+r.pnl,0);
-  ctx.push(`Solde de Session : <span style="color:${sessionPnl>=0?'var(--green)':'var(--danger)'}">${sessionPnl>=0?'+':''}${Math.round(sessionPnl).toLocaleString('fr-FR')} F</span>`);
-  document.getElementById('session-context').innerHTML=ctx.join('<br>');
-}
-
-function renderConseil() {
-  const box=document.getElementById('conseil-box');
-  const played=rounds.filter(r=>r.result==='win'||r.result==='loss');
-  if (played.length<5) {
-    box.className='conseil neutral';
-    box.innerHTML='<strong>Calibrage en cours…</strong>Enregistrez encore quelques tours pour obtenir une lecture de l\'état de la variance.';
-    return;
-  }
-  const n=rounds.length;
-  const pnl=rounds.reduce((s,r)=>s+r.pnl,0);
-  const wins=played.filter(r=>r.result==='win').length;
-  const wr=wins/played.length;
-  const lowCrash=rounds.filter(r=>r.multi<1.5).length/n;
-  const last5l=rounds.slice(0,5).filter(r=>r.result==='loss').length;
-  
-  const rng = getRNGPhase();
-
-  let msg='', cls='neutral';
-  
-  if (rng.phase === 'ASPIRATION SÉVÈRE') {
-    cls='bad';
-    msg=`<strong>🚨 ALERTE : CHOC DE VARIANCE (CYCLE TRÈS FROID)</strong>
-    La machine aligne des micro-crashs pour rééquilibrer sa marge bénéficiaire. 
-    <br>Conseil : <b>Ne forcez pas.</b> Passez les tours ou visez un retrait éclair à <b>1.15x</b>.`;
-  } else if (rng.phase === 'DISPERSION ACTIVE') {
-    cls='ok';
-    msg=`<strong>🚀 CYCLE DE DISTRIBUTION ACTIF (CYCLE CHAUD)</strong>
-    Le flux libère l'énergie de variance accumulée. Des runs élevés se produisent.
-    <br>Conseil : Tentez des paliers à <b>2.50x – 3.50x</b> avec des mises modérées.`;
-  } else if (rng.phase === 'ALTERNANCE') {
-    cls='ok';
-    msg=`<strong>🔄 PATTERN OSCILLANT DÉTECTÉ</strong>
-    Le RNG se comporte comme une suite binaire High / Low alternée.
-    <br>Conseil : Suivez la contre-tendance. Si le coup précédent est &lt;2x, visez <b>2.10x</b>. Sinon, visez <b>1.35x</b>.`;
-  } else {
-    msg=`<strong>📊 VARIANCE STANDARD</strong>
-    La machine oscille dans son couloir mathématique théorique stable.
-    <br>Conseil : Soyez patient et maintenez des sorties régulières entre <b>1.50x et 1.80x</b>.`;
-  }
-  box.className='conseil '+cls;
-  box.innerHTML=msg;
-}
-
-function renderProba() {
-  const n=rounds.length;
-  const thresholds=[
-    {id:'15', val:1.5, theory:THEORY[1.5]},
-    {id:'2',  val:2,   theory:THEORY[2]},
-    {id:'3',  val:3,   theory:THEORY[3]},
-    {id:'5',  val:5,   theory:THEORY[5]},
-  ];
-  if (n<3) {
-    thresholds.forEach(t=>{ document.getElementById('pp-'+t.id).textContent='—'; document.getElementById('ps-'+t.id).textContent='—'; document.getElementById('pc-'+t.id).textContent='—'; });
-    return;
-  }
-  thresholds.forEach(t => {
-    const obs=rounds.filter(r=>r.multi>=t.val).length/n;
-    const pct=Math.round(obs*100);
-    const ci=waldCI(obs,n);
-    document.getElementById('pb-'+t.id).style.width=Math.min(pct,100)+'%';
-    document.getElementById('pp-'+t.id).textContent=pct+'%';
-    document.getElementById('pc-'+t.id).textContent=`[${Math.round(ci.low*100)}-${Math.round(ci.high*100)}%]`;
-    const diff=obs-t.theory;
-    const sig=document.getElementById('ps-'+t.id);
-    if (diff>0.05)       { sig.textContent='↑ CHAUD'; sig.className='proba-signal sig-hot'; }
-    else if (diff<-0.05) { sig.textContent='↓ FROID'; sig.className='proba-signal sig-cold'; }
-    else                  { sig.textContent='≈ NORM';  sig.className='proba-signal sig-neu'; }
-  });
-}
-
-function renderStreak() {
-  const el=document.getElementById('streak-box');
-  const last20=rounds.slice(0,20).reverse();
-  if (!last20.length) { el.innerHTML='<div style="color:var(--dim);font-size:12px;letter-spacing:1px;">Aucun tour encore</div>'; return; }
-  const cm={low:'sd-low',mid:'sd-mid',hi:'sd-high',moon:'sd-moon'};
-  el.innerHTML=last20.map(r=>{
-    const s=r.multi<1.5?'low':r.multi<2?'mid':r.multi<5?'hi':'moon';
-    const lbl=r.multi>=10?'🚀':r.multi.toFixed(1);
-    return `<div class="streak-dot ${cm[s]}" title="${r.multi}x — ${r.result}">${lbl}</div>`;
-  }).join('');
-}
-
-function renderMarkovMatrix() {
-  const el=document.getElementById('markov-matrix');
-  const info=document.getElementById('markov-info');
-  if (rounds.length<3) {
-    el.innerHTML='<div style="color:var(--dim);font-size:11px;grid-column:span 5;">3 tours minimum requis.</div>';
-    return;
-  }
-  const raw=buildMarkovMatrix();
-  const norm=normalizeBayes(raw,2); // Prior faible pour plus de réactivité
-  const ss=['<1.5','1.5-3','3-6','≥6'];
-  let html='<div class="mh"></div>';
-  ss.forEach(l=>{ html+=`<div class="mh">${l}</div>`; });
-  norm.forEach((row,i)=>{
-    html+=`<div class="mrow-lbl">${ss[i]}</div>`;
-    row.forEach((v,j)=>{
-      const pct=Math.round(v*100);
-      const cls=pct>=40?'high':pct>=25?'med':'low';
-      const hl=i===j?'outline:1px solid rgba(255,255,255,0.1);':'';
-      html+=`<div class="mcell ${cls}" style="${hl}">${pct}%</div>`;
+    selectedMise = v;
+    document.getElementById('inp-mise').value = v;
+    document.querySelectorAll('.mise-btn').forEach(b => {
+        b.classList.toggle('active', parseInt(b.innerText.replace('K','000')) === v);
     });
-  });
-  el.innerHTML=html;
-  const cur=getState(rounds[0].multi);
-  info.innerHTML=`État courant : <b style="color:${STATE_COLORS[cur]}">${STATE_LABELS[cur]}</b> · Transitions sur fenêtre ultra-courte (capte les surchauffes du RNG).`;
+}
+
+function setResult(r) {
+    selectedResult = r;
+    document.querySelectorAll('.rbtn').forEach(b => b.className = 'rbtn');
+    document.getElementById('rb-' + r).classList.add('sel-' + r);
+}
+
+function addRound() {
+    const multi = parseFloat(document.getElementById('inp-multi').value);
+    const mise = parseFloat(document.getElementById('inp-mise').value) || 0;
+
+    if (!multi || multi < 1) { alert("Entrez un multiplicateur valide"); return; }
+    if (selectedResult === '') { alert("Sélectionnez GAGNÉ, PERDU ou PASSÉ"); return; }
+
+    let pnl = 0;
+    if (selectedResult === 'win') pnl = mise * (multi - 1);
+    if (selectedResult === 'loss') pnl = -mise;
+
+    rounds.unshift({
+        id: Date.now(),
+        multi: multi,
+        mise: mise,
+        result: selectedResult,
+        pnl: pnl,
+        time: new Date().toLocaleTimeString()
+    });
+
+    save();
+    render();
+    
+    // Reset
+    document.getElementById('inp-multi').value = '';
+    selectedResult = '';
+    document.querySelectorAll('.rbtn').forEach(b => b.className = 'rbtn');
+    document.getElementById('inp-multi').focus();
+}
+
+function clearAll() { if(confirm("Supprimer ?")) { rounds = []; save(); render(); } }
+
+function getState(v) {
+    if (v < 1.5) return 0;
+    if (v < 3) return 1;
+    if (v < 6) return 2;
+    return 3;
+}
+
+// --- RENDER ENGINE ---
+function render() {
+    const n = rounds.length;
+    const pnl = rounds.reduce((s, r) => s + r.pnl, 0);
+    const played = rounds.filter(r => r.result !== 'skip');
+    const wins = played.filter(r => r.result === 'win').length;
+    const wr = played.length ? Math.round((wins / played.length) * 100) : 0;
+
+    // UI Stats
+    document.getElementById('s-total').innerText = n;
+    document.getElementById('s-pnl').innerText = Math.round(pnl).toLocaleString();
+    document.getElementById('s-bankroll').innerText = (bankrollInitial + pnl).toLocaleString();
+    document.getElementById('s-wr').innerText = wr + "%";
+
+    renderHistory();
+    renderStreaks();
+    renderAnalysis(n, wr, pnl);
 }
 
 function renderHistory() {
-  const el=document.getElementById('history-list');
-  if (!rounds.length) { el.innerHTML='<div class="empty">[ AUCUN TOUR ENREGISTRÉ ]</div>'; return; }
-  el.innerHTML=rounds.map((r,i)=>{
-    const mc=r.multi<1.5?'low':r.multi<2?'mid':r.multi<5?'hi':'moon';
-    const rl=r.result==='win'?'✅ WIN':r.result==='loss'?'❌ LOSS':'⏭ SKIP';
-    const pc=r.pnl>0?'pos':r.pnl<0?'neg':'';
-    const pl=r.pnl!==0?(r.pnl>0?'+':'')+Math.round(r.pnl).toLocaleString('fr-FR')+' F':'—';
-    return `<div class="hitem ${i===0?'flash':''}">
-      <div class="h-n">#${rounds.length-i}</div>
-      <div class="h-m ${mc}">${r.multi.toFixed(2)}x</div>
-      <div class="h-mise">${r.mise?r.mise.toLocaleString('fr-FR')+' F':'—'}</div>
-      <div class="h-r ${r.result}">${rl}</div>
-      <div class="h-pnl ${pc}">${pl}</div>
-      <button class="btn-del" onclick="deleteRound(${r.id})">✕</button>
-    </div>`;
-  }).join('');
+    const list = document.getElementById('history-list');
+    if (rounds.length === 0) { list.innerHTML = '<div style="padding:20px; text-align:center; color:var(--dim)">Aucune donnée</div>'; return; }
+    
+    list.innerHTML = rounds.map(r => `
+        <div class="hitem">
+            <span style="font-size:10px; color:var(--dim)">${r.time.split(':')[0]}:${r.time.split(':')[1]}</span>
+            <b style="color:${r.multi >= 2 ? 'var(--green)' : 'var(--danger)'}">${r.multi.toFixed(2)}x</b>
+            <span style="font-size:12px">${r.mise} F</span>
+            <span style="font-size:11px; color:${r.pnl >= 0 ? 'var(--green)' : 'var(--danger)'}">${r.pnl >= 0 ? '+' : ''}${Math.round(r.pnl)}</span>
+            <button onclick="deleteItem(${r.id})" style="background:none; border:none; color:var(--dim); cursor:pointer">✕</button>
+        </div>
+    `).join('');
 }
 
-function renderDist() {
-  const n=rounds.length;
-  const chi=computeChi2();
-  const alertBox=document.getElementById('chi-alert-box');
-  if (n>=10) {
-    alertBox.style.display='block';
-    alertBox.className='chi-alert '+(chi.chi2>15.09?'danger':chi.chi2>11.07?'warn':'ok');
-    alertBox.innerHTML=`<b>Déviation globale de Session :</b> χ²=${chi.valStr} · <span style="color:${chi.color}">${chi.status}</span>`;
-  } else { alertBox.style.display='none'; }
+function deleteItem(id) {
+    rounds = rounds.filter(r => r.id !== id);
+    save(); render();
+}
 
-  if (!n) return;
-  const zones=[
-    r=>r.multi<1.5, r=>r.multi>=1.5&&r.multi<2, r=>r.multi>=2&&r.multi<3,
-    r=>r.multi>=3&&r.multi<5, r=>r.multi>=5&&r.multi<10, r=>r.multi>=10
-  ];
-  zones.forEach((fn,i)=>{
-    const c=rounds.filter(fn).length;
-    const p=Math.round(c/n*100);
-    document.getElementById(`db${i+1}`).style.width=p+'%';
-    document.getElementById(`dp${i+1}`).textContent=p+'%';
-    const contrib=chi.contributions[i];
-    const dchi=document.getElementById(`dc${i+1}`);
-    if (n>=10) {
-      const cc=contrib>3?'var(--danger)':contrib>1?'var(--warn)':'var(--dim)';
-      dchi.innerHTML=`<span style="color:${cc}">${contrib.toFixed(2)}</span>`;
-    } else {
-      dchi.textContent='—';
+function renderStreaks() {
+    const box = document.getElementById('streak-box');
+    const last20 = rounds.slice(0, 20).reverse();
+    box.innerHTML = last20.map(r => {
+        let color = r.multi < 1.5 ? 'var(--danger)' : r.multi < 3 ? 'var(--warn)' : 'var(--green)';
+        return `<div class="streak-dot" style="border-color:${color}; color:${color}">${r.multi.toFixed(1)}</div>`;
+    }).join('');
+}
+
+function renderAnalysis(n, wr, pnl) {
+    const multDisplay = document.getElementById('pred-mult');
+    const sigDisplay = document.getElementById('pred-signal');
+    const markovBox = document.getElementById('markov-bars');
+    const kellyDisplay = document.getElementById('kelly-amount');
+    const kellyNote = document.getElementById('kelly-note');
+    const conseilBox = document.getElementById('conseil-box');
+
+    if (n < 3) {
+        multDisplay.innerText = "?";
+        sigDisplay.innerText = `Attente (${n}/3)`;
+        return;
     }
-  });
+
+    // Phase RNG
+    const last5 = rounds.slice(0, 5);
+    const coldCount = last5.filter(r => r.multi < 1.5).length;
+    const hotCount = last5.filter(r => r.multi > 3).length;
+    
+    let target = 1.70;
+    let phase = "NEUTRE";
+    let phaseColor = "var(--green)";
+
+    if (coldCount >= 3) {
+        phase = "ASPIRATION"; phaseColor = "var(--danger)"; target = 1.20;
+    } else if (hotCount >= 2) {
+        phase = "DISTRIBUTION"; phaseColor = "var(--purple)"; target = 3.20;
+    }
+
+    multDisplay.innerText = target.toFixed(2) + "x";
+    multDisplay.className = "pred-multiplier " + (target > 3 ? "zone-moon" : target < 1.5 ? "zone-low" : "zone-hi");
+    sigDisplay.innerText = "PHASE : " + phase;
+    sigDisplay.style.color = phaseColor;
+
+    // Markov Simulé
+    const states = [0,0,0,0];
+    rounds.slice(0, 10).forEach(r => states[getState(r.multi)]++);
+    const labels = ["Crash","Bas","Moyen","Haut"];
+    const colors = ["var(--danger)","var(--warn)","var(--green)","var(--purple)"];
+    
+    markovBox.innerHTML = states.map((s, i) => {
+        let pct = (s / Math.min(n, 10)) * 100;
+        return `
+            <div style="font-size:10px; display:flex; justify-content:space-between; margin-bottom:2px">
+                <span>${labels[i]}</span><span>${Math.round(pct)}%</span>
+            </div>
+            <div class="conf-bar-wrap"><div class="conf-bar" style="width:${pct}%; background:${colors[i]}"></div></div>
+        `;
+    }).join('');
+
+    // Mise
+    if (phase === "ASPIRATION") {
+        kellyDisplay.innerText = "100 F";
+        kellyNote.innerText = "Machine fermée. Protection de bankroll.";
+    } else {
+        let rec = Math.max(100, Math.round((bankrollInitial + pnl) * 0.02 / 100) * 100);
+        kellyDisplay.innerText = rec.toLocaleString() + " F";
+        kellyNote.innerText = "Cycle favorable détecté.";
+    }
+
+    // Conseil
+    conseilBox.innerHTML = `<strong>Cycle ${phase}</strong><br>La machine est en mode ${phase.toLowerCase()}. ${phase === 'ASPIRATION' ? 'Prudence extrême, cashout rapide.' : 'Opportunité de chercher des paliers.'}`;
+    conseilBox.style.borderLeftColor = phaseColor;
 }
 
-// ── INIT ──
-document.addEventListener('keydown', e=>{ if(e.key==='Enter') addRound(); });
-function shake(id) {
-  const el=document.getElementById(id);
-  el.style.borderColor='var(--danger)'; el.style.boxShadow='0 0 10px rgba(255,45,45,0.4)';
-  setTimeout(()=>{ el.style.borderColor=''; el.style.boxShadow=''; },800); el.focus();
-}
+// --- INIT ---
+document.addEventListener('keydown', e => { if (e.key === 'Enter') addRound(); });
 render();
-document.getElementById('inp-multi').focus();
 </script>
 </body>
 </html>
