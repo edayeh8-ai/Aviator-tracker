@@ -3,749 +3,908 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AVIATOR TRACKER</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<title>AVIATOR TRACKER v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #050a0f;
-    --panel: #0a1520;
-    --border: #0f3a5a;
-    --accent: #00d4ff;
-    --danger: #ff3a3a;
-    --warn: #ffaa00;
-    --green: #00ff88;
-    --text: #c8e8f8;
-    --dim: #4a7a9a;
-    --glow: 0 0 20px rgba(0,212,255,0.3);
-  }
+:root {
+  --bg: #040810;
+  --panel: #080f1a;
+  --panel2: #0c1824;
+  --border: #0e3050;
+  --accent: #00c8ff;
+  --danger: #ff2d2d;
+  --warn: #ffb300;
+  --green: #00ff7f;
+  --purple: #cc44ff;
+  --text: #b8ddf0;
+  --dim: #3a6a8a;
+  --glow-a: rgba(0,200,255,0.35);
+  --glow-d: rgba(255,45,45,0.35);
+  --glow-g: rgba(0,255,127,0.35);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 15px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Share Tech Mono', monospace;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+body::before {
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(0,200,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,200,255,0.025) 1px, transparent 1px);
+  background-size:50px 50px;
+  pointer-events:none;z-index:0;
+}
 
-  /* Animated grid background */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
-  }
+body::after {
+  content:'';
+  position:fixed;
+  top:-40%;left:-20%;
+  width:70%;height:70%;
+  background: radial-gradient(ellipse, rgba(0,150,255,0.04) 0%, transparent 70%);
+  pointer-events:none;z-index:0;
+}
 
-  .container {
-    position: relative;
-    z-index: 1;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
-  }
+.wrap { position:relative;z-index:1;max-width:960px;margin:0 auto;padding:16px; }
 
-  /* HEADER */
-  header {
-    text-align: center;
-    padding: 30px 0 20px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 24px;
-    position: relative;
-  }
+/* ── HEADER ── */
+header {
+  text-align:center;
+  padding:28px 0 18px;
+  margin-bottom:20px;
+  position:relative;
+}
+.logo {
+  font-family:'Orbitron',sans-serif;
+  font-size:clamp(22px,5vw,40px);
+  font-weight:900;
+  letter-spacing:10px;
+  color:var(--accent);
+  text-shadow:0 0 25px var(--glow-a),0 0 60px rgba(0,200,255,0.15);
+  animation:logopulse 4s ease-in-out infinite;
+}
+.logo em{color:var(--danger);font-style:normal;}
+.tagline{font-size:11px;letter-spacing:4px;color:var(--dim);margin-top:5px;text-transform:uppercase;}
+.logo-line{
+  width:120px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  margin:12px auto 0;
+}
+@keyframes logopulse{
+  0%,100%{text-shadow:0 0 25px var(--glow-a),0 0 60px rgba(0,200,255,0.15);}
+  50%{text-shadow:0 0 40px var(--glow-a),0 0 100px rgba(0,200,255,0.3);}
+}
 
-  header::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 200px;
-    height: 1px;
-    background: var(--accent);
-    box-shadow: var(--glow);
-  }
+/* ── STATS GRID ── */
+.stats-grid {
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:10px;
+  margin-bottom:16px;
+}
+.sc {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:12px 10px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+  transition:border-color .3s,transform .2s;
+}
+.sc:hover{border-color:var(--accent);transform:translateY(-2px);}
+.sc::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  opacity:.6;
+}
+.sc-label{font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:6px;}
+.sc-val{
+  font-family:'Orbitron',sans-serif;
+  font-size:clamp(16px,2.5vw,22px);
+  font-weight:700;
+  color:var(--accent);
+}
+.sc-val.red{color:var(--danger);}
+.sc-val.grn{color:var(--green);}
+.sc-val.org{color:var(--warn);}
+.sc-val.pur{color:var(--purple);}
 
-  .logo {
-    font-family: 'Orbitron', sans-serif;
-    font-size: clamp(24px, 5vw, 42px);
-    font-weight: 900;
-    letter-spacing: 8px;
-    color: var(--accent);
-    text-shadow: 0 0 30px rgba(0,212,255,0.6), 0 0 60px rgba(0,212,255,0.2);
-    animation: pulse 3s ease-in-out infinite;
-  }
+/* ── TWO COLUMNS ── */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
 
-  .logo span { color: var(--danger); }
+/* ── CARD ── */
+.card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:6px;
+  overflow:hidden;
+}
+.card-head{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 16px;
+  border-bottom:1px solid var(--border);
+  background:rgba(0,200,255,0.03);
+}
+.card-title{
+  font-family:'Orbitron',sans-serif;
+  font-size:10px;letter-spacing:3px;
+  color:var(--accent);text-transform:uppercase;
+}
+.card-body{padding:16px;}
 
-  .subtitle {
-    font-size: 11px;
-    letter-spacing: 4px;
-    color: var(--dim);
-    margin-top: 6px;
-    text-transform: uppercase;
-  }
+/* ── MISE BUTTONS ── */
+.mise-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-bottom:12px;
+}
+.mise-btn{
+  background:var(--panel2);
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:9px 4px;
+  color:var(--text);
+  font-family:'Share Tech Mono',monospace;
+  font-size:13px;
+  cursor:pointer;
+  transition:all .2s;
+  text-align:center;
+  letter-spacing:1px;
+}
+.mise-btn:hover,.mise-btn.active{
+  background:var(--accent);
+  color:var(--bg);
+  border-color:var(--accent);
+  box-shadow:0 0 12px var(--glow-a);
+  font-weight:700;
+}
 
-  @keyframes pulse {
-    0%, 100% { text-shadow: 0 0 30px rgba(0,212,255,0.6), 0 0 60px rgba(0,212,255,0.2); }
-    50% { text-shadow: 0 0 50px rgba(0,212,255,0.9), 0 0 100px rgba(0,212,255,0.4); }
-  }
+.mise-custom-row{
+  display:flex;gap:8px;align-items:center;margin-bottom:12px;
+}
+.mise-custom-row label{
+  font-size:10px;letter-spacing:2px;color:var(--dim);
+  white-space:nowrap;text-transform:uppercase;
+}
+.mise-custom-row input{
+  flex:1;
+  background:var(--bg);border:1px solid var(--border);border-radius:4px;
+  padding:8px 12px;color:var(--text);
+  font-family:'Share Tech Mono',monospace;font-size:15px;
+  transition:border-color .2s,box-shadow .2s;
+}
+.mise-custom-row input:focus{
+  outline:none;border-color:var(--accent);
+  box-shadow:0 0 8px var(--glow-a);
+}
 
-  /* STATS ROW */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-bottom: 24px;
-  }
+/* ── INPUT MULTI ── */
+.multi-row{display:flex;gap:10px;align-items:flex-end;margin-bottom:12px;}
+.field{display:flex;flex-direction:column;gap:5px;flex:1;}
+.field label{font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;}
+.field input,.field select{
+  background:var(--bg);border:1px solid var(--border);border-radius:4px;
+  padding:10px 14px;color:var(--text);
+  font-family:'Share Tech Mono',monospace;font-size:17px;
+  transition:border-color .2s,box-shadow .2s;width:100%;
+  -moz-appearance:textfield;
+}
+.field input::-webkit-outer-spin-button,
+.field input::-webkit-inner-spin-button{-webkit-appearance:none;}
+.field input:focus,.field select:focus{
+  outline:none;border-color:var(--accent);
+  box-shadow:0 0 8px var(--glow-a);
+}
+.field select option{background:var(--panel);}
 
-  .stat-card {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 14px 12px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.3s;
-  }
+.result-btns{display:flex;gap:8px;margin-bottom:14px;}
+.rbtn{
+  flex:1;padding:9px;border:1px solid var(--border);
+  border-radius:4px;background:var(--panel2);
+  color:var(--dim);font-family:'Rajdhani',sans-serif;
+  font-size:14px;font-weight:600;cursor:pointer;
+  transition:all .2s;letter-spacing:1px;
+}
+.rbtn:hover{border-color:var(--accent);color:var(--accent);}
+.rbtn.sel-win{background:rgba(0,255,127,0.1);border-color:var(--green);color:var(--green);}
+.rbtn.sel-loss{background:rgba(255,45,45,0.1);border-color:var(--danger);color:var(--danger);}
+.rbtn.sel-skip{background:rgba(255,179,0,0.1);border-color:var(--warn);color:var(--warn);}
 
-  .stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: var(--accent);
-    opacity: 0.5;
-  }
+.btn-add{
+  width:100%;
+  background:var(--accent);color:var(--bg);
+  border:none;border-radius:4px;
+  padding:13px;
+  font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;
+  letter-spacing:3px;cursor:pointer;
+  transition:all .25s;
+}
+.btn-add:hover{
+  background:#fff;
+  box-shadow:0 0 25px var(--glow-a);
+  transform:translateY(-1px);
+}
+.btn-add:active{transform:translateY(0);}
 
-  .stat-card:hover { border-color: var(--accent); }
+/* ── CONSEIL STRATEGY ── */
+.conseil{
+  padding:14px 16px;
+  font-size:14px;line-height:1.7;
+  border-left:3px solid var(--warn);
+  margin:0;
+}
+.conseil.ok{border-left-color:var(--green);}
+.conseil.bad{border-left-color:var(--danger);}
+.conseil strong{display:block;margin-bottom:4px;font-size:15px;}
+.conseil.ok strong{color:var(--green);}
+.conseil.bad strong{color:var(--danger);}
+.conseil.neutral strong{color:var(--warn);}
 
-  .stat-label {
-    font-size: 9px;
-    letter-spacing: 2px;
-    color: var(--dim);
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
+/* ── PROBABILITE LIVE ── */
+.proba-section{margin-bottom:14px;}
+.proba-row{
+  display:flex;align-items:center;gap:10px;
+  padding:7px 0;
+  border-bottom:1px solid rgba(14,48,80,0.5);
+  font-size:13px;
+}
+.proba-row:last-child{border-bottom:none;}
+.proba-label{width:130px;color:var(--dim);flex-shrink:0;}
+.proba-bar-wrap{
+  flex:1;height:14px;
+  background:rgba(255,255,255,0.03);
+  border-radius:2px;overflow:hidden;
+}
+.proba-bar{height:100%;border-radius:2px;transition:width .7s cubic-bezier(.4,0,.2,1);}
+.proba-pct{width:46px;text-align:right;font-family:'Share Tech Mono',monospace;font-size:12px;}
+.proba-signal{
+  width:70px;text-align:center;
+  font-size:11px;font-weight:700;letter-spacing:1px;
+  padding:2px 6px;border-radius:3px;
+}
+.sig-hot{background:rgba(0,255,127,0.15);color:var(--green);}
+.sig-cold{background:rgba(255,45,45,0.15);color:var(--danger);}
+.sig-neu{background:rgba(255,179,0,0.1);color:var(--warn);}
 
-  .stat-value {
-    font-family: 'Orbitron', sans-serif;
-    font-size: clamp(18px, 3vw, 26px);
-    font-weight: 700;
-    color: var(--accent);
-  }
+/* ── STREAK ── */
+.streak-box{
+  display:flex;gap:6px;flex-wrap:wrap;padding:14px 16px;
+}
+.streak-dot{
+  width:28px;height:28px;border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;
+  font-family:'Share Tech Mono',monospace;
+}
+.sd-low{background:rgba(255,45,45,0.2);color:var(--danger);border:1px solid rgba(255,45,45,0.4);}
+.sd-mid{background:rgba(255,179,0,0.15);color:var(--warn);border:1px solid rgba(255,179,0,0.3);}
+.sd-high{background:rgba(0,200,255,0.12);color:var(--accent);border:1px solid rgba(0,200,255,0.3);}
+.sd-moon{background:rgba(204,68,255,0.15);color:var(--purple);border:1px solid rgba(204,68,255,0.4);}
 
-  .stat-value.danger { color: var(--danger); }
-  .stat-value.green { color: var(--green); }
-  .stat-value.warn { color: var(--warn); }
+/* ── HISTORY ── */
+.history-wrap{margin-bottom:14px;}
+.history-list{max-height:260px;overflow-y:auto;}
+.history-list::-webkit-scrollbar{width:3px;}
+.history-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
 
-  /* INPUT SECTION */
-  .input-section {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 20px;
-    margin-bottom: 24px;
-  }
+.hitem{
+  display:grid;
+  grid-template-columns:34px 90px 100px 90px 80px auto;
+  align-items:center;
+  padding:9px 16px;
+  border-bottom:1px solid rgba(14,48,80,0.4);
+  font-size:13px;
+  animation:slideIn .25s ease;
+  transition:background .2s;
+}
+.hitem:hover{background:rgba(0,200,255,0.03);}
+.hitem:last-child{border-bottom:none;}
+@keyframes slideIn{from{opacity:0;transform:translateX(-8px);}to{opacity:1;transform:translateX(0);}}
 
-  .input-title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 11px;
-    letter-spacing: 3px;
-    color: var(--accent);
-    margin-bottom: 16px;
-    text-transform: uppercase;
-  }
+.h-n{color:var(--dim);font-size:11px;}
+.h-m{font-family:'Orbitron',sans-serif;font-weight:700;font-size:15px;}
+.h-m.low{color:var(--danger);}
+.h-m.mid{color:var(--warn);}
+.h-m.hi{color:var(--green);}
+.h-m.moon{color:var(--purple);text-shadow:0 0 8px rgba(204,68,255,.5);}
+.h-mise{color:var(--dim);font-family:'Share Tech Mono',monospace;}
+.h-r{font-weight:700;font-size:13px;}
+.h-r.win{color:var(--green);}
+.h-r.loss{color:var(--danger);}
+.h-r.skip{color:var(--warn);}
+.h-pnl{font-family:'Orbitron',sans-serif;font-size:12px;}
+.h-pnl.pos{color:var(--green);}
+.h-pnl.neg{color:var(--danger);}
+.btn-del{background:none;border:none;color:var(--dim);cursor:pointer;font-size:13px;padding:2px 6px;transition:color .2s;}
+.btn-del:hover{color:var(--danger);}
 
-  .input-row {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr auto;
-    gap: 12px;
-    align-items: end;
-  }
+.empty{text-align:center;padding:30px;color:var(--dim);font-size:12px;letter-spacing:2px;}
 
-  .field { display: flex; flex-direction: column; gap: 6px; }
+/* ── FULL WIDTH CARD ── */
+.full-card{margin-bottom:14px;}
 
-  .field label {
-    font-size: 9px;
-    letter-spacing: 2px;
-    color: var(--dim);
-    text-transform: uppercase;
-  }
+/* ── DIST ── */
+.dist-rows{display:flex;flex-direction:column;gap:9px;padding:14px 16px;}
+.drow{display:grid;grid-template-columns:100px 1fr 48px 70px;align-items:center;gap:10px;font-size:13px;}
+.dl{color:var(--dim);text-align:right;}
+.dbar-w{height:16px;background:rgba(255,255,255,0.03);border-radius:2px;overflow:hidden;}
+.dbar{height:100%;border-radius:2px;transition:width .6s cubic-bezier(.4,0,.2,1);}
+.dpct{font-family:'Share Tech Mono',monospace;font-size:11px;text-align:right;}
+.dtheory{color:var(--dim);font-size:11px;font-family:'Share Tech Mono',monospace;}
 
-  .field input, .field select {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    padding: 12px 14px;
-    color: var(--text);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 18px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    width: 100%;
-    -moz-appearance: textfield;
-  }
+/* ── BTN CLEAR ── */
+.btn-sm{
+  background:transparent;border:1px solid var(--danger);color:var(--danger);
+  border-radius:3px;padding:4px 10px;
+  font-family:'Share Tech Mono',monospace;font-size:10px;
+  cursor:pointer;letter-spacing:1px;transition:all .2s;
+}
+.btn-sm:hover{background:var(--danger);color:var(--bg);}
 
-  .field input::-webkit-outer-spin-button,
-  .field input::-webkit-inner-spin-button { -webkit-appearance: none; }
+/* ── FOOTER ── */
+footer{
+  text-align:center;padding:16px 0;
+  color:var(--dim);font-size:10px;letter-spacing:2px;
+  border-top:1px solid var(--border);margin-top:4px;
+}
 
-  .field input:focus, .field select:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 10px rgba(0,212,255,0.2);
-  }
+/* ── RESPONSIVE ── */
+@media(max-width:650px){
+  .stats-grid{grid-template-columns:repeat(3,1fr);}
+  .cols{grid-template-columns:1fr;}
+  .hitem{grid-template-columns:28px 70px 80px auto;}
+  .h-mise,.h-r{display:none;}
+  .mise-grid{grid-template-columns:repeat(3,1fr);}
+}
 
-  .field select option { background: var(--panel); }
-
-  .btn-add {
-    background: var(--accent);
-    color: var(--bg);
-    border: none;
-    border-radius: 3px;
-    padding: 12px 24px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
-    height: 48px;
-  }
-
-  .btn-add:hover {
-    background: #fff;
-    box-shadow: 0 0 20px rgba(0,212,255,0.5);
-    transform: translateY(-1px);
-  }
-
-  .btn-add:active { transform: translateY(0); }
-
-  /* STRATEGY ALERT */
-  .strategy-box {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--warn);
-    border-radius: 4px;
-    padding: 14px 18px;
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    font-size: 13px;
-  }
-
-  .strategy-box .icon { font-size: 20px; }
-  .strategy-box .msg { color: var(--text); line-height: 1.6; }
-  .strategy-box .msg strong { color: var(--warn); }
-  .strategy-box.ok { border-left-color: var(--green); }
-  .strategy-box.ok .msg strong { color: var(--green); }
-  .strategy-box.bad { border-left-color: var(--danger); }
-  .strategy-box.bad .msg strong { color: var(--danger); }
-
-  /* HISTORY */
-  .history-section {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    overflow: hidden;
-    margin-bottom: 24px;
-  }
-
-  .history-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 14px 18px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .history-title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 11px;
-    letter-spacing: 3px;
-    color: var(--accent);
-    text-transform: uppercase;
-  }
-
-  .btn-clear {
-    background: transparent;
-    border: 1px solid var(--danger);
-    color: var(--danger);
-    border-radius: 3px;
-    padding: 5px 12px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    cursor: pointer;
-    letter-spacing: 1px;
-    transition: all 0.2s;
-  }
-
-  .btn-clear:hover { background: var(--danger); color: var(--bg); }
-
-  .history-list {
-    max-height: 280px;
-    overflow-y: auto;
-  }
-
-  .history-list::-webkit-scrollbar { width: 4px; }
-  .history-list::-webkit-scrollbar-track { background: var(--bg); }
-  .history-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
-  .history-item {
-    display: grid;
-    grid-template-columns: 40px 1fr 1fr 1fr 1fr auto;
-    align-items: center;
-    padding: 10px 18px;
-    border-bottom: 1px solid rgba(15,58,90,0.4);
-    font-size: 13px;
-    animation: slideIn 0.3s ease;
-    transition: background 0.2s;
-  }
-
-  .history-item:hover { background: rgba(0,212,255,0.03); }
-  .history-item:last-child { border-bottom: none; }
-
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateX(-10px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-
-  .h-num { color: var(--dim); font-size: 11px; }
-
-  .h-multi {
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
-  }
-
-  .h-multi.low { color: var(--danger); }
-  .h-multi.mid { color: var(--warn); }
-  .h-multi.high { color: var(--green); }
-  .h-multi.moon { color: #ff88ff; text-shadow: 0 0 10px rgba(255,136,255,0.5); }
-
-  .h-mise { color: var(--dim); }
-
-  .h-result { font-weight: 700; }
-  .h-result.win { color: var(--green); }
-  .h-result.loss { color: var(--danger); }
-
-  .h-pnl { font-family: 'Orbitron', sans-serif; font-size: 13px; }
-  .h-pnl.pos { color: var(--green); }
-  .h-pnl.neg { color: var(--danger); }
-
-  .btn-del {
-    background: none;
-    border: none;
-    color: var(--dim);
-    cursor: pointer;
-    font-size: 14px;
-    padding: 2px 6px;
-    transition: color 0.2s;
-  }
-  .btn-del:hover { color: var(--danger); }
-
-  .empty-state {
-    text-align: center;
-    padding: 40px;
-    color: var(--dim);
-    font-size: 13px;
-    letter-spacing: 2px;
-  }
-
-  /* DISTRIBUTION */
-  .dist-section {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 20px;
-    margin-bottom: 24px;
-  }
-
-  .dist-title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 11px;
-    letter-spacing: 3px;
-    color: var(--accent);
-    margin-bottom: 16px;
-    text-transform: uppercase;
-  }
-
-  .dist-bars { display: flex; flex-direction: column; gap: 10px; }
-
-  .dist-row {
-    display: grid;
-    grid-template-columns: 90px 1fr 50px;
-    align-items: center;
-    gap: 12px;
-    font-size: 12px;
-  }
-
-  .dist-label { color: var(--dim); text-align: right; }
-
-  .dist-bar-wrap {
-    height: 18px;
-    background: rgba(255,255,255,0.03);
-    border-radius: 2px;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .dist-bar {
-    height: 100%;
-    border-radius: 2px;
-    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-  }
-
-  .dist-bar::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1));
-  }
-
-  .dist-pct { color: var(--text); text-align: right; font-size: 11px; }
-
-  /* FOOTER */
-  footer {
-    text-align: center;
-    padding: 20px 0;
-    color: var(--dim);
-    font-size: 10px;
-    letter-spacing: 2px;
-    border-top: 1px solid var(--border);
-  }
-
-  /* RESPONSIVE */
-  @media (max-width: 600px) {
-    .stats-row { grid-template-columns: repeat(2, 1fr); }
-    .input-row { grid-template-columns: 1fr 1fr; }
-    .btn-add { grid-column: span 2; }
-    .history-item { grid-template-columns: 30px 1fr 1fr auto; font-size: 12px; }
-    .h-mise, .h-result { display: none; }
-  }
-
-  /* Flash animation for new entry */
-  @keyframes flash {
-    0% { background: rgba(0,212,255,0.15); }
-    100% { background: transparent; }
-  }
-
-  .flash { animation: flash 0.8s ease; }
+@keyframes flash{0%{background:rgba(0,200,255,0.12);}100%{background:transparent;}}
+.flash{animation:flash .8s ease;}
 </style>
 </head>
 <body>
-<div class="container">
+<div class="wrap">
 
-  <header>
-    <div class="logo">AVIA<span>TOR</span> TRACKER</div>
-    <div class="subtitle">Outil d'analyse statistique personnelle</div>
-  </header>
+<!-- HEADER -->
+<header>
+  <div class="logo">AVIA<em>TOR</em> TRACKER</div>
+  <div class="tagline">Analyse statistique & probabiliste personnelle</div>
+  <div class="logo-line"></div>
+</header>
 
-  <!-- STATS -->
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-label">Tours joués</div>
-      <div class="stat-value" id="stat-total">0</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">P&L Total</div>
-      <div class="stat-value" id="stat-pnl">0</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Taux victoire</div>
-      <div class="stat-value" id="stat-winrate">—</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Mult. moyen</div>
-      <div class="stat-value" id="stat-avg">—</div>
-    </div>
-  </div>
+<!-- STATS -->
+<div class="stats-grid">
+  <div class="sc"><div class="sc-label">Tours</div><div class="sc-val" id="s-total">0</div></div>
+  <div class="sc"><div class="sc-label">P&L (FCFA)</div><div class="sc-val" id="s-pnl">0</div></div>
+  <div class="sc"><div class="sc-label">Win Rate</div><div class="sc-val" id="s-wr">—</div></div>
+  <div class="sc"><div class="sc-label">Mult. moyen</div><div class="sc-val" id="s-avg">—</div></div>
+  <div class="sc"><div class="sc-label">Streak actuel</div><div class="sc-val" id="s-streak">—</div></div>
+</div>
 
-  <!-- STRATEGY ALERT -->
-  <div class="strategy-box" id="strategy-alert">
-    <div class="icon">📊</div>
-    <div class="msg">Entre tes premiers tours pour voir l'analyse de ta stratégie en temps réel.</div>
-  </div>
+<!-- ROW 1: INPUT + CONSEIL -->
+<div class="cols">
 
   <!-- INPUT -->
-  <div class="input-section">
-    <div class="input-title">▶ Nouveau Tour</div>
-    <div class="input-row">
-      <div class="field">
-        <label>Multiplicateur crash</label>
-        <input type="number" id="inp-multi" placeholder="ex: 2.45" step="0.01" min="1" autofocus>
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">▶ Nouveau tour</div>
+    </div>
+    <div class="card-body">
+
+      <!-- MISES RAPIDES -->
+      <div style="font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:8px;">Mise rapide (FCFA)</div>
+      <div class="mise-grid">
+        <div class="mise-btn" onclick="selectMise(100)">100</div>
+        <div class="mise-btn" onclick="selectMise(200)">200</div>
+        <div class="mise-btn" onclick="selectMise(500)">500</div>
+        <div class="mise-btn" onclick="selectMise(1000)">1 000</div>
+        <div class="mise-btn" onclick="selectMise(2000)">2 000</div>
+        <div class="mise-btn" onclick="selectMise(5000)">5 000</div>
+        <div class="mise-btn" onclick="selectMise(10000)" style="grid-column:span 3;">10 000 MAX</div>
       </div>
-      <div class="field">
-        <label>Ma mise</label>
-        <input type="number" id="inp-mise" placeholder="ex: 100" step="1" min="0">
+
+      <div class="mise-custom-row">
+        <label>Ou montant libre :</label>
+        <input type="number" id="inp-mise" placeholder="ex: 750" min="100" max="10000" step="100">
       </div>
-      <div class="field">
-        <label>Résultat</label>
-        <select id="inp-result">
-          <option value="">— Résultat —</option>
-          <option value="win">✅ Gagné</option>
-          <option value="loss">❌ Perdu</option>
-          <option value="skip">⏭ Passé</option>
-        </select>
+
+      <div class="multi-row">
+        <div class="field">
+          <label>Multiplicateur crash</label>
+          <input type="number" id="inp-multi" placeholder="ex: 2.45" step="0.01" min="1">
+        </div>
       </div>
-      <button class="btn-add" onclick="addRound()">+ ADD</button>
+
+      <div style="font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:7px;">Résultat</div>
+      <div class="result-btns">
+        <button class="rbtn" id="rb-win"  onclick="setResult('win')">✅ GAGNÉ</button>
+        <button class="rbtn" id="rb-loss" onclick="setResult('loss')">❌ PERDU</button>
+        <button class="rbtn" id="rb-skip" onclick="setResult('skip')">⏭ PASSÉ</button>
+      </div>
+
+      <button class="btn-add" onclick="addRound()">+ ENREGISTRER (ENTRÉE)</button>
     </div>
   </div>
 
-  <!-- HISTORY -->
-  <div class="history-section">
-    <div class="history-header">
-      <div class="history-title">📋 Historique des tours</div>
-      <button class="btn-clear" onclick="clearAll()">⚠ RESET</button>
+  <!-- CONSEIL STRATEGIE -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">🧠 Analyse & Conseil</div>
     </div>
-    <div class="history-list" id="history-list">
-      <div class="empty-state">[ AUCUN TOUR ENREGISTRÉ ]</div>
+    <div id="conseil-box" class="conseil neutral">
+      <strong>En attente de données…</strong>
+      Entre au moins 5 tours pour obtenir une analyse probabiliste de ta session.
+    </div>
+
+    <!-- PROBA LIVE -->
+    <div style="padding:0 16px 8px;border-top:1px solid var(--border);margin-top:0;">
+      <div style="font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;padding:10px 0 8px;">Probabilités observées vs théoriques</div>
+      <div class="proba-section" id="proba-section">
+        <div class="proba-row">
+          <div class="proba-label">Atteindre 1.5x</div>
+          <div class="proba-bar-wrap"><div class="proba-bar" id="pb-15" style="width:0%;background:var(--warn)"></div></div>
+          <div class="proba-pct" id="pp-15">—</div>
+          <div class="proba-signal" id="ps-15">—</div>
+        </div>
+        <div class="proba-row">
+          <div class="proba-label">Atteindre 2x</div>
+          <div class="proba-bar-wrap"><div class="proba-bar" id="pb-2" style="width:0%;background:var(--accent)"></div></div>
+          <div class="proba-pct" id="pp-2">—</div>
+          <div class="proba-signal" id="ps-2">—</div>
+        </div>
+        <div class="proba-row">
+          <div class="proba-label">Atteindre 3x</div>
+          <div class="proba-bar-wrap"><div class="proba-bar" id="pb-3" style="width:0%;background:var(--green)"></div></div>
+          <div class="proba-pct" id="pp-3">—</div>
+          <div class="proba-signal" id="ps-3">—</div>
+        </div>
+        <div class="proba-row">
+          <div class="proba-label">Atteindre 5x</div>
+          <div class="proba-bar-wrap"><div class="proba-bar" id="pb-5" style="width:0%;background:var(--purple)"></div></div>
+          <div class="proba-pct" id="pp-5">—</div>
+          <div class="proba-signal" id="ps-5">—</div>
+        </div>
+      </div>
     </div>
   </div>
-
-  <!-- DISTRIBUTION -->
-  <div class="dist-section">
-    <div class="dist-title">📈 Distribution des multiplicateurs</div>
-    <div class="dist-bars" id="dist-bars">
-      <div class="dist-row">
-        <div class="dist-label">Crash &lt; 1.5x</div>
-        <div class="dist-bar-wrap"><div class="dist-bar" id="bar-1" style="width:0%;background:#ff3a3a"></div></div>
-        <div class="dist-pct" id="pct-1">0%</div>
-      </div>
-      <div class="dist-row">
-        <div class="dist-label">1.5x — 2x</div>
-        <div class="dist-bar-wrap"><div class="dist-bar" id="bar-2" style="width:0%;background:#ffaa00"></div></div>
-        <div class="dist-pct" id="pct-2">0%</div>
-      </div>
-      <div class="dist-row">
-        <div class="dist-label">2x — 5x</div>
-        <div class="dist-bar-wrap"><div class="dist-bar" id="bar-3" style="width:0%;background:#00d4ff"></div></div>
-        <div class="dist-pct" id="pct-3">0%</div>
-      </div>
-      <div class="dist-row">
-        <div class="dist-label">5x — 10x</div>
-        <div class="dist-bar-wrap"><div class="dist-bar" id="bar-4" style="width:0%;background:#00ff88"></div></div>
-        <div class="dist-pct" id="pct-4">0%</div>
-      </div>
-      <div class="dist-row">
-        <div class="dist-label">+10x 🚀</div>
-        <div class="dist-bar-wrap"><div class="dist-bar" id="bar-5" style="width:0%;background:#ff88ff"></div></div>
-        <div class="dist-pct" id="pct-5">0%</div>
-      </div>
-    </div>
-  </div>
-
-  <footer>AVIATOR TRACKER v1.0 — Données stockées localement sur votre appareil — Jeu responsable</footer>
 
 </div>
 
+<!-- ROW 2: STREAK + HISTORY -->
+<div class="cols">
+
+  <!-- STREAK VISUEL -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">⚡ Derniers 20 tours</div>
+    </div>
+    <div class="streak-box" id="streak-box">
+      <div style="color:var(--dim);font-size:12px;letter-spacing:1px;">Aucun tour encore</div>
+    </div>
+  </div>
+
+  <!-- CONSEIL MISE -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">💡 Recommandation mise</div>
+    </div>
+    <div style="padding:16px;" id="mise-conseil">
+      <div style="color:var(--dim);font-size:13px;line-height:1.8;">
+        Entre tes tours pour recevoir une recommandation de mise adaptée à ta session en cours.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- HISTORY FULL -->
+<div class="card full-card history-wrap">
+  <div class="card-head">
+    <div class="card-title">📋 Historique complet</div>
+    <button class="btn-sm" onclick="clearAll()">⚠ RESET</button>
+  </div>
+  <div class="history-list" id="history-list">
+    <div class="empty">[ AUCUN TOUR ENREGISTRÉ ]</div>
+  </div>
+</div>
+
+<!-- DISTRIBUTION -->
+<div class="card full-card">
+  <div class="card-head">
+    <div class="card-title">📊 Distribution — Observé vs Théorique</div>
+  </div>
+  <div class="dist-rows">
+    <div class="drow">
+      <div class="dl">Crash &lt; 1.5x</div>
+      <div class="dbar-w"><div class="dbar" id="db1" style="width:0%;background:var(--danger)"></div></div>
+      <div class="dpct" id="dp1">0%</div>
+      <div class="dtheory">théorie: 35%</div>
+    </div>
+    <div class="drow">
+      <div class="dl">1.5x — 2x</div>
+      <div class="dbar-w"><div class="dbar" id="db2" style="width:0%;background:var(--warn)"></div></div>
+      <div class="dpct" id="dp2">0%</div>
+      <div class="dtheory">théorie: 16%</div>
+    </div>
+    <div class="drow">
+      <div class="dl">2x — 3x</div>
+      <div class="dbar-w"><div class="dbar" id="db3" style="width:0%;background:var(--accent)"></div></div>
+      <div class="dpct" id="dp3">0%</div>
+      <div class="dtheory">théorie: 16%</div>
+    </div>
+    <div class="drow">
+      <div class="dl">3x — 5x</div>
+      <div class="dbar-w"><div class="dbar" id="db4" style="width:0%;background:var(--green)"></div></div>
+      <div class="dpct" id="dp4">0%</div>
+      <div class="dtheory">théorie: 13%</div>
+    </div>
+    <div class="drow">
+      <div class="dl">5x — 10x</div>
+      <div class="dbar-w"><div class="dbar" id="db5" style="width:0%;background:#00ccaa)"></div></div>
+      <div class="dpct" id="dp5">0%</div>
+      <div class="dtheory">théorie: 11%</div>
+    </div>
+    <div class="drow">
+      <div class="dl">+10x 🚀</div>
+      <div class="dbar-w"><div class="dbar" id="db6" style="width:0%;background:var(--purple)"></div></div>
+      <div class="dpct" id="dp6">0%</div>
+      <div class="dtheory">théorie: 9%</div>
+    </div>
+  </div>
+</div>
+
+<footer>AVIATOR TRACKER v2 · Analyse probabiliste · Données locales · Jouer responsable</footer>
+</div>
+
 <script>
-  // ── DATA ──────────────────────────────────────────────────────────────────
-  let rounds = JSON.parse(localStorage.getItem('aviator_rounds') || '[]');
+// ── ÉTAT ────────────────────────────────────────────────────────────────────
+let rounds = JSON.parse(localStorage.getItem('av2_rounds') || '[]');
+let selectedMise = 0;
+let selectedResult = '';
 
-  function save() {
-    localStorage.setItem('aviator_rounds', JSON.stringify(rounds));
+// Théorie Aviator (house edge 3%)
+const THEORY = {
+  1.5: 0.97/1.5,   // ~64.7%
+  2:   0.97/2,     // ~48.5%
+  3:   0.97/3,     // ~32.3%
+  5:   0.97/5,     // ~19.4%
+};
+
+function save(){ localStorage.setItem('av2_rounds', JSON.stringify(rounds)); }
+
+// ── MISE SELECTION ──────────────────────────────────────────────────────────
+function selectMise(v){
+  selectedMise = v;
+  document.getElementById('inp-mise').value = v;
+  document.querySelectorAll('.mise-btn').forEach(b => {
+    b.classList.toggle('active', parseInt(b.textContent.replace(/\s/g,'')) === v || b.textContent.includes(v));
+  });
+}
+
+document.getElementById('inp-mise').addEventListener('input', function(){
+  selectedMise = parseFloat(this.value) || 0;
+  document.querySelectorAll('.mise-btn').forEach(b => b.classList.remove('active'));
+});
+
+// ── RESULT SELECTION ────────────────────────────────────────────────────────
+function setResult(r){
+  selectedResult = r;
+  ['win','loss','skip'].forEach(x => {
+    document.getElementById('rb-'+x).className = 'rbtn' + (x===r ? ' sel-'+x : '');
+  });
+}
+
+// ── ADD ROUND ────────────────────────────────────────────────────────────────
+function addRound(){
+  const multiRaw = document.getElementById('inp-multi').value;
+  const multi = parseFloat(multiRaw);
+
+  if(!multiRaw || isNaN(multi) || multi < 1){
+    shake('inp-multi'); return;
+  }
+  if(!selectedMise && selectedResult !== 'skip'){
+    shake('inp-mise'); return;
   }
 
-  // ── ADD ROUND ─────────────────────────────────────────────────────────────
-  function addRound() {
-    const multiRaw = document.getElementById('inp-multi').value;
-    const miseRaw  = document.getElementById('inp-mise').value;
-    const result   = document.getElementById('inp-result').value;
+  const mise = selectedMise || 0;
+  let pnl = 0;
+  // Note: on suppose cashout au crash pour simplifier
+  // En réalité l'utilisateur a cashout avant ou après
+  if(selectedResult === 'win')  pnl = mise * (multi - 1);
+  if(selectedResult === 'loss') pnl = -mise;
 
-    const multi = parseFloat(multiRaw);
-    const mise  = parseFloat(miseRaw) || 0;
-
-    if (!multiRaw || isNaN(multi) || multi < 1) {
-      shake('inp-multi');
-      return;
-    }
-
-    // Compute P&L
-    let pnl = 0;
-    if (result === 'win')  pnl = mise * (multi - 1);  // simplified: won at crash multi
-    if (result === 'loss') pnl = -mise;
-
-    const round = {
-      id: Date.now(),
-      multi,
-      mise,
-      result,
-      pnl,
-      time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
-    };
-
-    rounds.unshift(round);
-    save();
-    render();
-
-    // Reset inputs
-    document.getElementById('inp-multi').value = '';
-    document.getElementById('inp-mise').value  = '';
-    document.getElementById('inp-result').value = '';
-    document.getElementById('inp-multi').focus();
-  }
-
-  function deleteRound(id) {
-    rounds = rounds.filter(r => r.id !== id);
-    save();
-    render();
-  }
-
-  function clearAll() {
-    if (confirm('Effacer tout l\'historique ?')) {
-      rounds = [];
-      save();
-      render();
-    }
-  }
-
-  // ── RENDER ────────────────────────────────────────────────────────────────
-  function render() {
-    renderStats();
-    renderHistory();
-    renderDistribution();
-    renderStrategy();
-  }
-
-  function renderStats() {
-    const total = rounds.length;
-    const pnl   = rounds.reduce((s, r) => s + r.pnl, 0);
-    const played = rounds.filter(r => r.result === 'win' || r.result === 'loss');
-    const wins  = played.filter(r => r.result === 'win').length;
-    const avgMulti = total ? (rounds.reduce((s, r) => s + r.multi, 0) / total) : 0;
-
-    const winRate = played.length ? Math.round(wins / played.length * 100) : null;
-
-    const pnlEl = document.getElementById('stat-pnl');
-    pnlEl.textContent = (pnl >= 0 ? '+' : '') + pnl.toFixed(0);
-    pnlEl.className = 'stat-value ' + (pnl > 0 ? 'green' : pnl < 0 ? 'danger' : '');
-
-    document.getElementById('stat-total').textContent = total;
-    document.getElementById('stat-winrate').textContent = winRate !== null ? winRate + '%' : '—';
-    document.getElementById('stat-avg').textContent = avgMulti ? avgMulti.toFixed(2) + 'x' : '—';
-
-    const wrEl = document.getElementById('stat-winrate');
-    if (winRate !== null) {
-      wrEl.className = 'stat-value ' + (winRate >= 60 ? 'green' : winRate >= 40 ? 'warn' : 'danger');
-    }
-  }
-
-  function multiClass(m) {
-    if (m < 1.5) return 'low';
-    if (m < 2)   return 'mid';
-    if (m < 10)  return 'high';
-    return 'moon';
-  }
-
-  function renderHistory() {
-    const el = document.getElementById('history-list');
-    if (!rounds.length) {
-      el.innerHTML = '<div class="empty-state">[ AUCUN TOUR ENREGISTRÉ ]</div>';
-      return;
-    }
-
-    el.innerHTML = rounds.map((r, i) => {
-      const mc = multiClass(r.multi);
-      const rc = r.result === 'win' ? 'win' : r.result === 'loss' ? 'loss' : '';
-      const rl = r.result === 'win' ? '✅ WIN' : r.result === 'loss' ? '❌ LOSS' : '⏭ SKIP';
-      const pc = r.pnl > 0 ? 'pos' : r.pnl < 0 ? 'neg' : '';
-      const pl = r.pnl !== 0 ? (r.pnl > 0 ? '+' : '') + r.pnl.toFixed(0) : '—';
-
-      return `<div class="history-item ${i === 0 ? 'flash' : ''}">
-        <div class="h-num">#${rounds.length - i}</div>
-        <div class="h-multi ${mc}">${r.multi.toFixed(2)}x</div>
-        <div class="h-mise">${r.mise ? r.mise : '—'}</div>
-        <div class="h-result ${rc}">${rl}</div>
-        <div class="h-pnl ${pc}">${pl}</div>
-        <button class="btn-del" onclick="deleteRound(${r.id})">✕</button>
-      </div>`;
-    }).join('');
-  }
-
-  function renderDistribution() {
-    if (!rounds.length) return;
-    const n = rounds.length;
-    const zones = [
-      r => r.multi < 1.5,
-      r => r.multi >= 1.5 && r.multi < 2,
-      r => r.multi >= 2 && r.multi < 5,
-      r => r.multi >= 5 && r.multi < 10,
-      r => r.multi >= 10,
-    ];
-
-    zones.forEach((fn, i) => {
-      const count = rounds.filter(fn).length;
-      const pct = Math.round(count / n * 100);
-      document.getElementById(`bar-${i+1}`).style.width = pct + '%';
-      document.getElementById(`pct-${i+1}`).textContent = pct + '%';
-    });
-  }
-
-  function renderStrategy() {
-    const box = document.getElementById('strategy-alert');
-    const played = rounds.filter(r => r.result === 'win' || r.result === 'loss');
-    if (played.length < 5) {
-      box.className = 'strategy-box';
-      box.innerHTML = `<div class="icon">📊</div><div class="msg">Entre <strong>au moins 5 tours joués</strong> pour voir l'analyse de ta stratégie.</div>`;
-      return;
-    }
-
-    const wins = played.filter(r => r.result === 'win').length;
-    const rate = wins / played.length;
-    const pnl  = rounds.reduce((s, r) => s + r.pnl, 0);
-    const lowCrash = rounds.filter(r => r.multi < 1.5).length / rounds.length;
-
-    let cls = 'strategy-box';
-    let icon = '⚠️';
-    let msg = '';
-
-    if (pnl > 0 && rate >= 0.55) {
-      cls += ' ok'; icon = '✅';
-      msg = `<strong>Bonne discipline !</strong> Ton taux de victoire est de ${Math.round(rate*100)}% avec un P&L positif. Continue à cashout tôt.`;
-    } else if (pnl < 0 && lowCrash > 0.45) {
-      cls += ' bad'; icon = '🚨';
-      msg = `<strong>Attention !</strong> ${Math.round(lowCrash*100)}% des crashs sont sous 1.5x. Tu misais peut-être trop haut. Réduis ta mise ou passe ces tours.`;
-    } else if (rate < 0.4) {
-      cls += ' bad'; icon = '🚨';
-      msg = `<strong>Stop-Loss recommandé.</strong> Ton taux de victoire est seulement ${Math.round(rate*100)}%. Fais une pause ou baisse ton seuil de cashout.`;
-    } else {
-      msg = `<strong>Session neutre.</strong> P&L : ${pnl.toFixed(0)} — Taux : ${Math.round(rate*100)}%. Surveille ta tendance sur les prochains tours.`;
-    }
-
-    box.className = cls;
-    box.innerHTML = `<div class="icon">${icon}</div><div class="msg">${msg}</div>`;
-  }
-
-  // ── KEYBOARD SHORTCUT ─────────────────────────────────────────────────────
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && document.activeElement.closest('.input-section')) {
-      addRound();
-    }
+  rounds.unshift({
+    id: Date.now(),
+    multi,
+    mise,
+    result: selectedResult || 'skip',
+    pnl,
+    time: new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})
   });
 
-  // ── SHAKE ANIMATION ───────────────────────────────────────────────────────
-  function shake(id) {
-    const el = document.getElementById(id);
-    el.style.borderColor = 'var(--danger)';
-    el.style.boxShadow = '0 0 10px rgba(255,58,58,0.4)';
-    setTimeout(() => {
-      el.style.borderColor = '';
-      el.style.boxShadow = '';
-    }, 800);
-    el.focus();
+  save();
+  render();
+
+  // Reset
+  document.getElementById('inp-multi').value = '';
+  document.getElementById('inp-mise').value = '';
+  selectedMise = 0;
+  selectedResult = '';
+  document.querySelectorAll('.mise-btn').forEach(b=>b.classList.remove('active'));
+  ['win','loss','skip'].forEach(x=>{ document.getElementById('rb-'+x).className='rbtn'; });
+  document.getElementById('inp-multi').focus();
+}
+
+function deleteRound(id){
+  rounds = rounds.filter(r=>r.id!==id);
+  save(); render();
+}
+
+function clearAll(){
+  if(confirm('Effacer tout l\'historique ?')){ rounds=[]; save(); render(); }
+}
+
+// ── RENDER ───────────────────────────────────────────────────────────────────
+function render(){
+  renderStats();
+  renderHistory();
+  renderStreak();
+  renderDist();
+  renderProba();
+  renderConseil();
+  renderMiseConseil();
+}
+
+function renderStats(){
+  const n = rounds.length;
+  const pnl = rounds.reduce((s,r)=>s+r.pnl, 0);
+  const played = rounds.filter(r=>r.result==='win'||r.result==='loss');
+  const wins = played.filter(r=>r.result==='win').length;
+  const wr = played.length ? Math.round(wins/played.length*100) : null;
+  const avg = n ? rounds.reduce((s,r)=>s+r.multi,0)/n : 0;
+
+  // Streak
+  let streak = 0, streakType = '';
+  for(let r of rounds){
+    if(streak===0){ streakType=r.result; streak=1; }
+    else if(r.result===streakType) streak++;
+    else break;
   }
 
-  // ── INIT ──────────────────────────────────────────────────────────────────
-  render();
+  document.getElementById('s-total').textContent = n;
+
+  const pnlEl = document.getElementById('s-pnl');
+  pnlEl.textContent = (pnl>=0?'+':'')+Math.round(pnl).toLocaleString('fr-FR');
+  pnlEl.className = 'sc-val '+(pnl>0?'grn':pnl<0?'red':'');
+
+  const wrEl = document.getElementById('s-wr');
+  wrEl.textContent = wr!==null ? wr+'%' : '—';
+  wrEl.className = 'sc-val '+(wr===null?'':(wr>=55?'grn':wr>=40?'org':'red'));
+
+  document.getElementById('s-avg').textContent = avg ? avg.toFixed(2)+'x' : '—';
+
+  const sk = document.getElementById('s-streak');
+  if(streak>0){
+    const icons = {win:'✅',loss:'❌',skip:'⏭'};
+    sk.textContent = icons[streakType]+'×'+streak;
+    sk.className = 'sc-val '+(streakType==='win'?'grn':streakType==='loss'?'red':'org');
+  } else {
+    sk.textContent='—'; sk.className='sc-val';
+  }
+}
+
+function multiCls(m){
+  if(m<1.5) return 'low';
+  if(m<2)   return 'mid';
+  if(m<5)   return 'hi';
+  return 'moon';
+}
+
+function renderHistory(){
+  const el = document.getElementById('history-list');
+  if(!rounds.length){ el.innerHTML='<div class="empty">[ AUCUN TOUR ENREGISTRÉ ]</div>'; return; }
+
+  el.innerHTML = rounds.map((r,i)=>{
+    const mc = multiCls(r.multi);
+    const rl = r.result==='win'?'✅ WIN':r.result==='loss'?'❌ LOSS':'⏭ SKIP';
+    const rc = r.result==='win'?'win':r.result==='loss'?'loss':'skip';
+    const pc = r.pnl>0?'pos':r.pnl<0?'neg':'';
+    const pl = r.pnl!==0?(r.pnl>0?'+':'')+Math.round(r.pnl).toLocaleString('fr-FR')+' F':'—';
+    return `<div class="hitem ${i===0?'flash':''}">
+      <div class="h-n">#${rounds.length-i}</div>
+      <div class="h-m ${mc}">${r.multi.toFixed(2)}x</div>
+      <div class="h-mise">${r.mise?r.mise.toLocaleString('fr-FR')+' F':'—'}</div>
+      <div class="h-r ${rc}">${rl}</div>
+      <div class="h-pnl ${pc}">${pl}</div>
+      <button class="btn-del" onclick="deleteRound(${r.id})">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function renderStreak(){
+  const el = document.getElementById('streak-box');
+  const last20 = rounds.slice(0,20).reverse();
+  if(!last20.length){ el.innerHTML='<div style="color:var(--dim);font-size:12px;letter-spacing:1px;">Aucun tour encore</div>'; return; }
+
+  el.innerHTML = last20.map(r=>{
+    const cls = multiCls(r.multi);
+    const clsMap = {low:'sd-low',mid:'sd-mid',hi:'sd-high',moon:'sd-moon'};
+    const label = r.multi>=10?'🚀':r.multi.toFixed(1);
+    return `<div class="streak-dot ${clsMap[cls]}" title="${r.multi}x">${label}</div>`;
+  }).join('');
+}
+
+function renderDist(){
+  if(!rounds.length) return;
+  const n = rounds.length;
+  const zones = [
+    r=>r.multi<1.5,
+    r=>r.multi>=1.5&&r.multi<2,
+    r=>r.multi>=2&&r.multi<3,
+    r=>r.multi>=3&&r.multi<5,
+    r=>r.multi>=5&&r.multi<10,
+    r=>r.multi>=10,
+  ];
+  zones.forEach((fn,i)=>{
+    const c = rounds.filter(fn).length;
+    const p = Math.round(c/n*100);
+    document.getElementById(`db${i+1}`).style.width=p+'%';
+    document.getElementById(`dp${i+1}`).textContent=p+'%';
+  });
+}
+
+function renderProba(){
+  const n = rounds.length;
+  if(n<3){
+    [15,2,3,5].forEach(x=>{
+      const k = x===15?'15':x;
+      document.getElementById('pp-'+k).textContent='—';
+      document.getElementById('ps-'+k).textContent='—';
+      document.getElementById('ps-'+k).className='proba-signal';
+    });
+    return;
+  }
+
+  const thresholds = [
+    {id:'15', val:1.5, theory:THEORY[1.5]},
+    {id:'2',  val:2,   theory:THEORY[2]},
+    {id:'3',  val:3,   theory:THEORY[3]},
+    {id:'5',  val:5,   theory:THEORY[5]},
+  ];
+
+  thresholds.forEach(t=>{
+    const obs = rounds.filter(r=>r.multi>=t.val).length / n;
+    const pct = Math.round(obs*100);
+    const barPct = Math.min(pct, 100);
+    document.getElementById('pb-'+t.id).style.width = barPct+'%';
+    document.getElementById('pp-'+t.id).textContent = pct+'%';
+
+    const diff = obs - t.theory;
+    const sig = document.getElementById('ps-'+t.id);
+    if(diff > 0.05){
+      sig.textContent='↑ CHAUD'; sig.className='proba-signal sig-hot';
+    } else if(diff < -0.05){
+      sig.textContent='↓ FROID'; sig.className='proba-signal sig-cold';
+    } else {
+      sig.textContent='≈ NORMAL'; sig.className='proba-signal sig-neu';
+    }
+  });
+}
+
+function renderConseil(){
+  const box = document.getElementById('conseil-box');
+  const played = rounds.filter(r=>r.result==='win'||r.result==='loss');
+
+  if(played.length < 5){
+    box.className='conseil neutral';
+    box.innerHTML='<strong>En attente…</strong>Entre au moins 5 tours joués pour l\'analyse.';
+    return;
+  }
+
+  const n = rounds.length;
+  const wins = played.filter(r=>r.result==='win').length;
+  const wr = wins/played.length;
+  const pnl = rounds.reduce((s,r)=>s+r.pnl,0);
+  const lowCrash = rounds.filter(r=>r.multi<1.5).length/n;
+  const last5 = rounds.slice(0,5);
+  const last5losses = last5.filter(r=>r.result==='loss').length;
+
+  // Analyse probabiliste des séries
+  let consecLow = 0;
+  for(let r of rounds){
+    if(r.multi<2) consecLow++; else break;
+  }
+
+  let msg='', cls='neutral';
+
+  if(last5losses>=4){
+    cls='bad';
+    msg=`<strong>🚨 STOP-LOSS RECOMMANDÉ</strong>
+    ${last5losses} défaites sur les 5 derniers tours. La variance est contre toi en ce moment.
+    Conseil : <b>Pause de 10 minutes</b> ou baisse ta mise au minimum (100 FCFA) pendant 5 tours.`;
+  } else if(consecLow>=4){
+    cls='neutral';
+    msg=`<strong>⚠️ Série de bas crashs (×${consecLow})</strong>
+    ${consecLow} crashs consécutifs sous 2x. Statistiquement, un multiplicateur plus élevé devient probable,
+    mais ce n'est pas une certitude. Envisage un cashout à <b>1.3x–1.5x</b> sur le prochain tour.`;
+  } else if(pnl>0 && wr>=0.55){
+    cls='ok';
+    msg=`<strong>✅ Bonne session</strong>
+    Taux de victoire ${Math.round(wr*100)}% · P&L positif. Continue avec discipline.
+    Cashout systématique entre <b>1.3x et 1.5x</b> pour sécuriser tes gains.`;
+  } else if(lowCrash>0.5){
+    cls='bad';
+    msg=`<strong>🔴 Session difficile</strong>
+    ${Math.round(lowCrash*100)}% des crashs sous 1.5x. Le jeu est "chaud" en petits crashs aujourd'hui.
+    Stratégie : <b>mises réduites + cashout précoce à 1.2x</b>.`;
+  } else {
+    msg=`<strong>📊 Session neutre</strong>
+    Win rate ${Math.round(wr*100)}% · Multiplicateur moyen normal.
+    Reste discipliné : cashout entre <b>1.3x–2x</b>, ne chasse pas les gros multiplicateurs.`;
+  }
+
+  box.className='conseil '+cls;
+  box.innerHTML=msg;
+}
+
+function renderMiseConseil(){
+  const el = document.getElementById('mise-conseil');
+  const played = rounds.filter(r=>r.result==='win'||r.result==='loss');
+  if(played.length<3){
+    el.innerHTML='<div style="color:var(--dim);font-size:13px;line-height:1.8;">Entre tes tours pour recevoir une recommandation de mise.</div>';
+    return;
+  }
+
+  const pnl = rounds.reduce((s,r)=>s+r.pnl,0);
+  const last3 = rounds.slice(0,3);
+  const last3losses = last3.filter(r=>r.result==='loss').length;
+  const avgMise = played.reduce((s,r)=>s+r.mise,0)/played.length;
+
+  let rec='';
+  if(last3losses>=3){
+    rec=`<div style="color:var(--danger);font-size:15px;font-weight:700;margin-bottom:8px;">🚨 Mise minimale conseillée</div>
+    <div style="font-family:'Orbitron',sans-serif;font-size:24px;color:var(--danger)">100 FCFA</div>
+    <div style="color:var(--dim);font-size:12px;margin-top:6px;">3 pertes consécutives — protège ton capital</div>`;
+  } else if(pnl>0 && last3losses===0){
+    const suggested = Math.min(avgMise*1.2, 10000);
+    const rounded = Math.round(suggested/100)*100;
+    rec=`<div style="color:var(--green);font-size:15px;font-weight:700;margin-bottom:8px;">✅ Tu peux maintenir</div>
+    <div style="font-family:'Orbitron',sans-serif;font-size:24px;color:var(--green)">${rounded.toLocaleString('fr-FR')} FCFA</div>
+    <div style="color:var(--dim);font-size:12px;margin-top:6px;">Session positive — reste prudent</div>`;
+  } else {
+    rec=`<div style="color:var(--warn);font-size:15px;font-weight:700;margin-bottom:8px;">⚠️ Mise prudente conseillée</div>
+    <div style="font-family:'Orbitron',sans-serif;font-size:24px;color:var(--warn)">200 FCFA</div>
+    <div style="color:var(--dim);font-size:12px;margin-top:6px;">Session mitigée — limite le risque</div>`;
+  }
+
+  el.innerHTML=rec;
+}
+
+// ── KEYBOARD ──────────────────────────────────────────────────────────────────
+document.addEventListener('keydown', e=>{
+  if(e.key==='Enter') addRound();
+});
+
+function shake(id){
+  const el=document.getElementById(id);
+  el.style.borderColor='var(--danger)';
+  el.style.boxShadow='0 0 10px rgba(255,45,45,0.4)';
+  setTimeout(()=>{ el.style.borderColor=''; el.style.boxShadow=''; }, 800);
+  el.focus();
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+render();
+document.getElementById('inp-multi').focus();
 </script>
 </body>
 </html>
